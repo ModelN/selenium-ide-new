@@ -15,7 +15,10 @@ async function onContextMenu(event: any) {
         '',
         false,
         null,
-        true
+        '',
+        '',
+        '',
+        false
       )
       break
     case 'Record Wait For Element Visible':
@@ -26,7 +29,11 @@ async function onContextMenu(event: any) {
         '',
         false,
         null,
-        true
+        ,
+                '',
+                '',
+                '',
+                false
       )
       break
     case 'Record Wait For Element Text':
@@ -37,7 +44,11 @@ async function onContextMenu(event: any) {
         el.innerText,
         false,
         null,
-        true
+        ,
+                '',
+                '',
+                '',
+                false
       )
       break
     case 'Record Wait For Element Editable':
@@ -48,7 +59,11 @@ async function onContextMenu(event: any) {
         '',
         false,
         null,
-        true
+        ,
+                '',
+                '',
+                '',
+                false
       )
       break
   }

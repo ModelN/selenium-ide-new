@@ -1,0 +1,351 @@
+/**
+ * Created by Tvegiraju on 12/27/2019.
+ */
+
+import LocatorBuilders from "../locator-builders_custom";
+import { locatorBuilders } from "../record-handlers_custom";
+
+export default function locatorBuilder_MN() {
+
+}
+const PREFERRED_ATTRIBUTES = [
+    'comppath',
+    'name',
+    'type',
+    'value',
+    'action',
+    'onclick'
+];
+
+const finderNamesToAddLocatorEvenIfElNotMatched = [
+    'leftNav',
+    'xpath:comppath',
+    'xpath:comppathRelative'
+];
+
+locatorBuilder_MN.updateAppSpecificOrder = function () {
+    console.log('inside mn custom')
+    LocatorBuilders.PREFERRED_ATTRIBUTES = PREFERRED_ATTRIBUTES;
+    LocatorBuilders.finderNamesToAddLocatorEvenIfElNotMatched = finderNamesToAddLocatorEvenIfElNotMatched;
+    LocatorBuilders.add('leftNav', leftNav);
+    LocatorBuilders.add('table', table);
+    LocatorBuilders.add('xpath:comppath', xpathComppath);
+    LocatorBuilders.add('xpath:titleAndPopUp', generateXPathForTitleAndPopUp);
+    LocatorBuilders.add('xpath:comppathRelative', xpathComppathRelative);
+    LocatorBuilders.add('xpath:attributes', locatorBuilders.xpathAttr);
+    var origDisplayNameFn = LocatorBuilders.getDisplayName;
+    LocatorBuilders.getDisplayName = function(e: any, ignoreInnerText: any) {
+        var displayName = origDisplayNameFn(e, ignoreInnerText);
+        if (!displayName) {
+            console.log('custom MN displayName');
+            displayName = getCustomDisplayNameFn(e);
+        }
+        return displayName;
+    };
+};
+
+function getXpathFromComppathAttr(nodeName: any, comppath: any) {
+    var xpathCond = '[' + LocatorBuilders.getXpathForAttribute('comppath', comppath) + ']';
+    return '//' + LocatorBuilders.xpathHtmlElement(nodeName.toLowerCase()) + xpathCond;
+}
+
+function getXpathOfAnElement(e: any, skipCases: any) {
+    var elXpath: any;
+    var comppath = e.getAttribute('comppath');
+    if (comppath) {
+        if (comppath.indexOf('spreadsheetContainer') > -1 && skipCases)
+            return undefined;
+        elXpath = LocatorBuilders.preciseXPath('//' + LocatorBuilders.xpathHtmlElement(e.nodeName.toLowerCase()) + '[@comppath=' + LocatorBuilders.attributeValue(comppath) + ']', e);
+        elXpath = elXpath.substring(6);
+        return elXpath;
+    }
+    if (e.id) {
+        elXpath = '//' + LocatorBuilders.xpathHtmlElement(e.nodeName.toLowerCase()) + '[@id=' + LocatorBuilders.attributeValue(e.id) + ']';
+        if (e == LocatorBuilders.findElement('id=' + e.id)) {
+            return elXpath;
+        }
+    }
+    if (e.name) {
+        elXpath = '//' + LocatorBuilders.xpathHtmlElement(e.nodeName.toLowerCase()) + '[@name=' + LocatorBuilders.attributeValue(e.name) + ']';
+        if (e == LocatorBuilders.findElement('name=' + e.name)) {
+            return elXpath;
+        } else {
+            elXpath = LocatorBuilders.preciseXPath(elXpath, e);
+            elXpath = elXpath.substring(6);
+            return elXpath;
+        }
+    }
+    return undefined;
+}
+
+function getCustomDisplayNameFn(e: any) {
+    var elXpath = getXpathOfAnElement(e, false);
+    if (elXpath) {
+        var labelXpath = elXpath + '/preceding::*[((local-name() = \'span\' and contains(@domattr,\'extField\')) or (local-name() = \'label\' and contains(@class,\'left\'))) and string-length(normalize-space(text())) > 1][1]';
+        var labelEl = LocatorBuilders.findElement(labelXpath);
+        if (labelEl && labelEl.innerText) {
+            var innerText = LocatorBuilders.getInnerTextWithoutChildren(labelEl);
+            if (innerText.length > 1)
+                return innerText;
+        }
+    }
+}
+
+function table(e: any) {
+    var recordedType: any;
+    var additionalData: any;
+    if (e.closest('div[class*=labeledGroup]'))
+        return null;
+    var elXpath = getXpathOfAnElement(e, true);
+    if (elXpath) {
+        var parXpath = elXpath + '/ancestor::tr[contains(@class,\'tableRow bodyRow bodyRow-\') or contains(@class,\'tableRow headerRow headerRow-\') ' +
+            'or contains(@class,\'tableRow footerRow footerRow-\')]';
+        var tdEl = LocatorBuilders.findElement(parXpath);
+        if (tdEl) {
+            var rowType = 'data';
+            if (tdEl.getAttribute('class').includes('headerRow-')) {
+                rowType = 'header';
+            } else if (tdEl.getAttribute('class').includes('footerRow-')) {
+                rowType = 'footer';
+            }
+            var elementType = '';
+            var nodeName = e.nodeName.toLowerCase();
+            var eType = e.type ? e.type.toLowerCase() : '';
+            var classes = e.getAttribute('class') ? e.getAttribute('class').toLowerCase() : '';
+            if (nodeName == 'span' && !classes.includes('anchor') && !classes.includes('fa-fw'))
+                elementType = 'PLAIN_TEXT'
+            else if (nodeName == 'a' || (nodeName == 'span' && classes.includes('anchor')))
+                elementType = 'LINK'
+            else if ((nodeName == 'input' && eType != 'hidden') || nodeName == 'select')
+                elementType = 'OTHER'
+            else if (nodeName == 'button')
+                elementType = 'BUTTON'
+            else if (nodeName == 'img')
+                elementType = 'IMAGE'
+            if (!recordedType) {
+                recordedType = 'table';
+                additionalData.rowType = rowType;
+                additionalData.elementType = elementType;
+            }
+            return 'table=' + elXpath;
+        }
+    }
+    return null;
+}
+
+function xpathComppath(e: any) {
+    //var displayName: any;
+    var linkEl = (e.nodeName.toLowerCase() == 'a' && e.getAttribute('comppath').includes('spreadsheetContainer')) ? e : e.closest('a[comppath*=spreadsheetContainer]')
+    if (linkEl) {
+        e = linkEl;
+        console.log('handling opener inside spreadsheetContainer')
+    }
+    var comppath = e.getAttribute('comppath');
+    var isCurrElHaveComppath = true;
+    if (!comppath) {
+        isCurrElHaveComppath = false;
+        comppath = e.parentNode.getAttribute('comppath')
+    }
+    if (comppath) {
+        var nodeName = isCurrElHaveComppath ? e.nodeName : e.parentNode.nodeName;
+        let locator = getXpathFromComppathAttr(nodeName, comppath) + (isCurrElHaveComppath ? '' : '/' + e.nodeName.toLowerCase());
+        //If comppath matches exactly with element found then only return comppath
+        if (LocatorBuilders.isElementUniqueWithXPath(locator, e))
+            return 'xpath=' + locator;
+        else {
+            if (comppath.indexOf('spreadsheetContainer') > -1) {
+                let labelLoc = '//' + LocatorBuilders.xpathHtmlElement(isCurrElHaveComppath?e.nodeName.toLowerCase():e.parentNode.nodeName.toLowerCase()) + '[@comppath=' + LocatorBuilders.attributeValue(comppath) + ']' +
+                    '/ancestor::tr[contains(@class, \'tableRow bodyRow\')]/td[1]/span';
+                let labelEl = LocatorBuilders.findElement(labelLoc);
+                var additionalData: any;
+                if (labelEl && labelEl.innerText) {
+                    var labelText = LocatorBuilders.getInnerTextWithoutChildren(labelEl).replace(':','')
+                    additionalData = labelText
+                    let finalLoc = '//td[(normalize-space(.)=\'' + labelText + '\' or normalize-space(.)=\'' + labelText + ':\')]//following::' + locator.substring(2);
+                    if (comppath.indexOf('spreadsheetContainer.FormularyCondition') > -1) {
+                        let labelParLoc = labelLoc + '/ancestor::div[contains(@comppath,\'spreadsheetContainer.FormularyCondition\')]//div[contains(@class,\'title\')]';
+                        let labelParEl = LocatorBuilders.findElement(labelParLoc);
+                        if (labelParEl && labelParEl.innerText) {
+                            var labelParText = LocatorBuilders.getInnerTextWithoutChildren(labelParEl)
+                            additionalData = labelParText + '->' + additionalData
+                            finalLoc = '//div[(translate(normalize-space(.),\'abcdefghijklmnopqrstuvwxyz\',\'ABCDEFGHIJKLMNOPQRSTUVWXYZ\')=translate(\'' + labelParText + '\',\'abcdefghijklmnopqrstuvwxyz\',\'ABCDEFGHIJKLMNOPQRSTUVWXYZ\'))]' +
+                                '//following::' + finalLoc.substring(2);
+                        }
+                    }
+                    //this.logging('Final Locator: ' + finalLoc);
+                    if (e == LocatorBuilders.findElement(finalLoc)) {
+                        if (additionalData) {
+                            additionalData.innerText = additionalData;
+                            // if (e.nodeName.toLowerCase() == 'a')
+                            //     displayName = labelText + ' chooser';
+                        }
+                        return 'xpath=' + finalLoc;
+                    }
+                }
+            }
+            if (e.innerText) {
+                let textLoc = locator + '[contains(.,\'' + LocatorBuilders.getInnerTextWithoutChildren(e) + '\')]';
+                if (LocatorBuilders.isElementUniqueWithXPath(textLoc, e))
+                    return 'xpath=' + textLoc;
+            }
+        }
+    }
+    return null;
+}
+
+function generateXPathForTitleAndPopUp(e: any) {
+    var detailTitleBar = e.closest('[class*=detailTitleBar]');
+    var alertBar = e.closest('[class*=showAlert]');
+    var msgPopup = e.closest('[class*=CMnDisplayMsgComp],[class*=CMnPopupComp]');
+    var errorIcon = e.closest('[class*=fieldError]');// span class=fieldError for error icon
+    var errorMsgPopup = e.closest('[class*=validationContainer]');
+    var locator;
+    if (detailTitleBar || alertBar) {
+        //find parent element for which comppath is defined and build locator relative to that
+        var comppathEl = e.closest('[comppath*=root]');
+        if (comppathEl) {
+            var comppath = comppathEl.getAttribute('comppath');
+            var titleClass = detailTitleBar ? 'detailTitleBar' : 'showAlert';
+            locator = "//*[@comppath='" + comppath + "']" + "//*[contains(@class,'" + titleClass + "')]//*[normalize-space(@class)='title']";
+        }
+    } else if (msgPopup) {
+        if (e.closest('table')) {
+            locator = "//*[contains(@class,'CMnDisplayMsgComp') or contains(@class,'CMnPopupComp')]//*[normalize-space(@class)='msgText']";
+        }
+    } else if (errorMsgPopup) {
+        locator = "//*[contains(@class,'validationContainer')]";
+        var elClass = e.getAttribute('class');
+        var elStyle = e.getAttribute('style');
+        //message is present at 2nd div child of above validationContainer
+        if (elClass && elClass.indexOf('closeLink') > -1)
+            locator = locator + "//*[contains(@class,'closeLink')]";
+        else if (elStyle && elStyle.indexOf('block') > -1)
+            locator = locator + "/div[2]";
+    } else if (errorIcon) {
+        //Below may need special handling if more than one error field appears at once on the page
+        //currently handled for one error field case only
+        locator = "//*[contains(@class,'fieldError') and contains(@class,'fa-fw')]";
+        if (LocatorBuilders.isElementUniqueWithXPath(locator, e))
+            return 'xpath=' + locator;
+        else
+            locator = undefined;
+    }
+    if (locator)
+        return "xpath=" + locator;
+    return null;
+}
+
+function xpathComppathRelative(e: any) {
+    var displayName: any;
+    let path = '';
+    let current = e;
+    while (current != null) {
+        if (current.parentNode != null) {
+            path = LocatorBuilders.relativeXPathFromParent(current) + path;
+            if (
+                1 == current.parentNode.nodeType && // ELEMENT_NODE
+                current.parentNode.getAttribute('comppath')
+            ) {
+                let locator = getXpathFromComppathAttr(current.parentNode.nodeName, current.parentNode.getAttribute('comppath'));
+                //this.logging('inside xpath:comppathRelative: ' + locator);
+                if (LocatorBuilders.isElementUniqueWithXPath(locator, current.parentNode)) {
+                    if (current.parentNode.nodeName.toLowerCase() == 'a') {
+                        displayName = (current.parentNode.innerText && current.parentNode.innerText.trim().length > 1) ? current.parentNode.innerText.trim() :
+                            (displayName ? displayName : LocatorBuilders.getDisplayName(current.parentNode, false));
+                        return 'xpath=' + locator;
+                    }
+                    return 'xpath=' + locator + path;
+                }
+            }
+        } else {
+            return null;
+        }
+        current = current.parentNode;
+    }
+    return null;
+}
+//Gajanna: Commented
+// function name(e: any) {
+//     if (e.name) {
+//         var splitByNumber = e.name.split(/\d+/)
+//         if (splitByNumber.length == 1) {
+//             return 'name=' + e.name
+//         } else if (splitByNumber.length > 1) {
+//             return 'xpath=//' + LocatorBuilders.xpathHtmlElement(e.nodeName.toLowerCase()) + '[' + LocatorBuilders.getXpathForAttribute('name', e.name) + ']'
+//         }
+//     }
+//     return null
+// }
+
+function leftNav(e: any) {
+    var recordedType: any;
+    var additionalData: any;
+    var current = e;
+    if (current.parentNode != null) {
+        var parentNode = current.parentNode;
+        var isLeftNav = (parentNode.nodeName.toLowerCase() == 'div' ? (parentNode.hasAttribute('open') && parentNode.hasAttribute('isleaf')) : false);
+        if ( isLeftNav ) {
+            var displayName: any = undefined;
+            var nodeName = current.nodeName.toLowerCase();
+            var isToggleBtn = nodeName == 'span' && current.hasAttribute('class') && current.getAttribute('class').includes('clickable');
+            var elXpath = LocatorBuilders.xpathHtmlElement(nodeName);
+            var elInnerText;
+            if (isToggleBtn) {
+                elXpath = elXpath + '[contains(@class,\'clickable\')]';
+                var nextEl = e.nextSibling;
+                elInnerText = LocatorBuilders.getInnerTextWithoutChildren(nextEl);
+                displayName = 'expand/collapse button next to ' + elInnerText;
+            } else if (nodeName == 'a') {
+                elInnerText = LocatorBuilders.getInnerTextWithoutChildren(current);
+                elXpath = elXpath + '[contains(.,\'' + elInnerText + '\')]';
+            } else {
+                return null;
+            }
+            var links = '',dynamicLinks: any[] = [];
+            while (parentNode != null && isLeftNav) {
+                var isLeaf = parentNode.hasAttribute('isleaf') ? parentNode.getAttribute('isleaf') : undefined;
+                var curText = LocatorBuilders.getInnerTextWithoutChildren(parentNode.querySelectorAll('a')[0]);
+                links = curText + '->' + links;
+                if (isLeaf == 'false')
+                    dynamicLinks.push(curText);
+                var nameAttr = parentNode.hasAttribute('name') ? ('-node-' + parentNode.getAttribute('name').split('-node-')[1]) : undefined;
+                var curElXpath = 'div[';
+                if (nameAttr)
+                    curElXpath = curElXpath + 'contains(@name,\'' + nameAttr + '\')';
+                else if (elInnerText)
+                    curElXpath = curElXpath + 'contains(.,\'' + elInnerText + '\')';
+                else
+                    return null;
+                elXpath = curElXpath + ']/' + elXpath;
+                parentNode = parentNode.parentNode;
+                if (parentNode != null) {
+                    isLeftNav = (parentNode.nodeName.toLowerCase() == 'div' ? (parentNode.hasAttribute('open') && parentNode.hasAttribute('isleaf')) : false);
+                }
+            }
+            if (LocatorBuilders.isElementUniqueWithXPath('//' + elXpath, e)) {
+                if (dynamicLinks.length >= 2 && !recordedType) {
+                    recordedType = 'leftNav';
+                    var navLinks = '';
+                    //Ignore last element
+                    for (var k = 0 ; k < dynamicLinks.length - 1; k++) {
+                        navLinks = dynamicLinks[k] + (navLinks == '' ? '' : '->' + navLinks);
+                    }
+                    additionalData.navLinks = navLinks;
+                    //this.logging('From leftNav: ' + JSON.stringify(this.additionalData));
+                }
+                if (displayName && !displayName)
+                    displayName = displayName;
+                if (e.closest('form')) {
+                    var formNameAttr = '';
+                    var curElXpathWithForm = 'form[';
+                    formNameAttr = (e.closest('form').getAttribute('name')) ? (e.closest('form').getAttribute('name')) : undefined;
+                    if (formNameAttr)
+                        curElXpathWithForm = curElXpathWithForm + 'contains(@name,\'' + formNameAttr + '\')';
+                    elXpath = curElXpathWithForm + ']//' + elXpath;
+                }
+                return "xpath=//" + elXpath;
+            }
+        }
+    }
+    return null;
+}

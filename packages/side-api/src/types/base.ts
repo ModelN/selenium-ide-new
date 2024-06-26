@@ -89,4 +89,7 @@ export type RecordNewCommandInput = Omit<
   insertBeforeLastCommand?: boolean
   frameLocation?: string
   winHandleId?: string
+  comment?: string
+  recordedType?: string
+  additionalData?: any
 }

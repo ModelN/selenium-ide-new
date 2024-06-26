@@ -12,6 +12,7 @@ declare global {
     sideAPI: Api & { mutators: typeof ApiMutators } & {
       resolveAPI?: (id: string, ...args: any[]) => void
     }
+  ws :  WebSocket
   }
 }
 

@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { handlers, observers } from './record-handlers'
+import { handlers, observers,customBuilders } from './record-handlers_custom'
 import * as recordShortcuts from './record-shortcuts'
 import { attach, detach } from './prompt-injector'
 import {
@@ -41,7 +41,9 @@ export interface RecordingState {
   preventClick: boolean
   enterTarget: HTMLElement | null
   enterValue: string | null
-  tabCheck: HTMLElement | null
+  tabCheck: HTMLElement | null,
+lastSelectedOption: string | undefined
+    lastSelectField: HTMLSelectElement | undefined
 }
 
 /**
@@ -96,6 +98,9 @@ export default class Recorder {
     value: string | [string, string][],
     insertBeforeLastCommand = false,
     actualFrameLocation: string | null = null,
+    comment?: string,
+    recordedType?: string,
+    additionalData?: any,
     overrideRecorder = false
   ) {
     let newCommand: RecordNewCommandInput = {
@@ -104,7 +109,10 @@ export default class Recorder {
       value,
       insertBeforeLastCommand,
       frameLocation: actualFrameLocation || this.frameLocation,
-      winHandleId: this.winHandleId,
+        winHandleId: this.winHandleId,
+        comment,
+        recordedType,
+        additionalData
     }
     const preprocessors = this.recorderPreprocessors
     for (let i = 0, ii = preprocessors.length; i !== ii; i++) {
@@ -199,8 +207,16 @@ export default class Recorder {
       }
       attachInputListeners(this.recordingState, this.window)
       attach(this.record.bind(this))
+    this.updateAppType();
       recordShortcuts.attach(this)
     }
+  }
+
+updateAppType() {
+    window.sideAPI.projects.getActive().then(function(res:any) {
+      console.log('appType: ' + res.appType);
+      customBuilders.updateAppType(res.appType);
+    });
   }
 
   detach() {
