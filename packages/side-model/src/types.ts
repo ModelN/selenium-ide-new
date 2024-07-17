@@ -18,6 +18,7 @@ export interface CommandShape {
   opensWindow?: boolean
   windowHandleName?: string
   windowTimeout?: number
+  otherData?: any
 }
 
 export interface SnapshotTestShape {
@@ -58,6 +59,7 @@ export interface ProjectShape {
   name: string
   url: string
   urls: string[]
+  appType: 'Base'
   timeout?: number
   delay?: number
   plugins: string[]

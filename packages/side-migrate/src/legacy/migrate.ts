@@ -77,6 +77,7 @@ export function migrateProject(files: FileObj[]) {
       tests: [],
     },
     suites: [],
+    appType:'Base',
     tests: [],
     url: '',
     urls: [],

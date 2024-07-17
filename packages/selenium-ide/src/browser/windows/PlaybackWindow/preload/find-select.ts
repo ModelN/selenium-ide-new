@@ -17,7 +17,8 @@
 
 import { EventListenerParams, LocatorFields } from '@seleniumhq/side-api'
 import scrollIntoViewIfNeeded from 'scroll-into-view-if-needed'
-import { singleton as locatorBuilders } from './locator-builders'
+import { singleton as locatorBuilders } from './locator-builders_custom'
+import LocatorBuilders from './locator-builders_custom'
 import TargetSelector from './target-selector'
 
 const init = () => {
@@ -71,7 +72,7 @@ function processElementAtCommand(
   try {
     const element = document.elementFromPoint(x, y)
     if (element) {
-      const target = locatorBuilders.buildAll(element as HTMLElement)
+      const target = locatorBuilders.buildAll(element as HTMLElement, false)
       return target
     }
   } catch (e) {
@@ -84,7 +85,7 @@ let targetSelector: TargetSelector | null = null
 function startSelection(field: LocatorFields) {
   targetSelector = new TargetSelector(function (element, win) {
     if (element && win) {
-      const target = locatorBuilders.buildAll(element)
+      const target = locatorBuilders.buildAll(element, false)
       if (target != null && Array.isArray(target)) {
         window.sideAPI.recorder.selectElement(field, target)
       }
@@ -121,7 +122,7 @@ function processMessage(event: MessageEvent<any>) {
 }
 
 async function processHighlightCommand(locator: string): Promise<void> {
-  const element = await locatorBuilders.findElement(locator)
+  const element = await LocatorBuilders.findElement(locator)
   await highlight(element)
 }
 

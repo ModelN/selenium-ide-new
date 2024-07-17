@@ -28,7 +28,7 @@ import {
   RecordNewCommandInput,
   RecorderPreprocessor,
 } from '@seleniumhq/side-api'
-import LocatorBuilders from './locator-builders'
+import LocatorBuilders from './locator-builders_custom'
 
 export interface RecordingState {
   typeTarget: HTMLElement | null
@@ -41,9 +41,9 @@ export interface RecordingState {
   preventClick: boolean
   enterTarget: HTMLElement | null
   enterValue: string | null
-  tabCheck: HTMLElement | null,
-lastSelectedOption: string | undefined
-    lastSelectField: HTMLSelectElement | undefined
+  tabCheck: HTMLElement | null
+  lastSelectedOption: string | undefined
+  lastSelectField: HTMLSelectElement | undefined
 }
 
 /**
@@ -60,22 +60,32 @@ export default class Recorder {
 
     this.getFrameLocation = this.getFrameLocation.bind(this)
     this.setWindowHandle = this.setWindowHandle.bind(this)
+    this.attach = this.attach.bind(this)
+    this.detach = this.detach.bind(this)
     // @ts-expect-error
     this.recordingState = {}
     this.addRecorderTracingAttribute()
     initFindSelect()
     // e.g., once on load
     this.getFrameLocation()
-
+    this.window.sideAPI.recorder.onStartRec.addListener(this.attach)
+    this.window.sideAPI.recorder.onStopRec.addListener(this.detach)
     this.window.sideAPI.recorder.getWinHandleId().then((id) => {
       this.winHandleId = id
     })
+    this.window.sideAPI.recorder.onStartRec.removeListener(
+      this.attach
+    )
+    this.window.sideAPI.recorder.onStopRec.removeListener(
+      this.detach
+    )
     handlers.forEach((handler) => {
       this.addEventHandler(...handler)
     })
     observers.forEach((observer) => {
       this.addMutationObserver(...observer)
     })
+    this.attach();
   }
 
   winHandleId: string = ''
@@ -86,7 +96,7 @@ export default class Recorder {
   recordingState: RecordingState
   frameLocation: string
   inputTypes: any[]
-
+  
   addRecorderTracingAttribute() {
     this.window.document.body.setAttribute('data-side-attach-once-loaded', '')
   }
@@ -162,6 +172,8 @@ export default class Recorder {
   }
 
   attach() {
+    debugger;
+    console.log('**************: ');
     if (!this.attached) {
       // @ts-expect-error
       this.window.addEventListener('message', this.setWindowHandle)
@@ -182,6 +194,7 @@ export default class Recorder {
           this.window.document.addEventListener(
             eventName,
             handlers[i].bind(this),
+            //this.eventListeners[eventKey][i],
             capture
           )
           this.eventListeners[eventKey].push(handlers[i])
@@ -204,10 +217,12 @@ export default class Recorder {
         enterTarget: null,
         enterValue: null,
         tabCheck: null,
+        lastSelectedOption: undefined,
+        lastSelectField: undefined
       }
       attachInputListeners(this.recordingState, this.window)
       attach(this.record.bind(this))
-    this.updateAppType();
+      this.updateAppType();
       recordShortcuts.attach(this)
     }
   }

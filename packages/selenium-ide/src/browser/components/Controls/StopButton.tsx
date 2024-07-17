@@ -13,7 +13,7 @@ const StopButton: FC = () => (
   >
     <IconButton
       {...baseControlProps}
-      onClick={() => window.sideAPI.playback.stop()}
+      onClick={() => {window.sideAPI.playback.stop();window.sideAPI.recorder.stop();}}
     >
       <StopIcon />
     </IconButton>

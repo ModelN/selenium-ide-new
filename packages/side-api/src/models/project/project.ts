@@ -12,6 +12,7 @@ export const project: ProjectShape = {
   id: loadingID,
   name: 'loading',
   url: 'http://loading',
+  appType: 'Base',
   version: '3.0',
   urls: [],
   plugins: [],

@@ -775,3 +775,5 @@ LocatorBuilders.add('xpath:innerText', function (this: LocatorBuilders, el) {
   }
 })
 
+
+export const singleton = new LocatorBuilders(window);

@@ -14,8 +14,10 @@ import type { Shape as RequestHighlightElement } from './requestHighlightElement
 import type { Shape as RequestSelectElement } from './requestSelectElement'
 import type { Shape as SelectElement } from './selectElement'
 import type { Shape as SetWindowHandle } from './setWindowHandle'
+import type { Shape as OnStartRec } from './onStartRec'
 import type { Shape as Start } from './start'
 import type { Shape as Stop } from './stop'
+import type { Shape as OnStopRec } from './onStopRec'
 
 import * as getFrameLocation from './getFrameLocation'
 import * as getLocatorOrder from './getLocatorOrder'
@@ -34,7 +36,9 @@ import * as requestSelectElement from './requestSelectElement'
 import * as selectElement from './selectElement'
 import * as setWindowHandle from './setWindowHandle'
 import * as start from './start'
+import * as onStartRec from './onStartRec'
 import * as stop from './stop'
+import * as onStopRec from './onStopRec'
 
 export const commands = {
   getFrameLocation,
@@ -53,8 +57,10 @@ export const commands = {
   requestSelectElement,
   selectElement,
   setWindowHandle,
+  onStartRec,
   start,
   stop,
+  onStopRec
 }
 
 /**
@@ -79,5 +85,7 @@ export type Shape = {
   selectElement: SelectElement
   setWindowHandle: SetWindowHandle
   start: Start
+  onStartRec: OnStartRec
   stop: Stop
+  onStopRec: OnStopRec
 }

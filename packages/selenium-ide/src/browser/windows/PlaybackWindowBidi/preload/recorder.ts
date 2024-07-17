@@ -20,7 +20,7 @@ import {
   RecorderPreprocessor,
 } from '@seleniumhq/side-api'
 import initFindSelect from 'browser/windows/PlaybackWindow/preload/find-select'
-import LocatorBuilders from 'browser/windows/PlaybackWindow/preload/locator-builders'
+import LocatorBuilders from 'browser/windows/PlaybackWindow/preload/locator-builders_custom'
 import {
   attach,
   detach,
@@ -28,7 +28,7 @@ import {
 import {
   handlers,
   observers,
-} from 'browser/windows/PlaybackWindow/preload/record-handlers'
+} from 'browser/windows/PlaybackWindow/preload/record-handlers_custom'
 import {
   EventHandler,
   ExpandedMessageEvent,
@@ -159,6 +159,7 @@ export default class Recorder {
   }
 
   attach() {
+    console.log('*******BIDI*******: ');
     if (!this.attached) {
       // @ts-expect-error
       this.window.addEventListener('message', this.setWindowHandle)

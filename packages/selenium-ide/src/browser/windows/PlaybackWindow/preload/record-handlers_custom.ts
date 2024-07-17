@@ -886,6 +886,7 @@ handlers.push([
                   if (innerText != contentTest) {
 
                     handleRecord(this, event, 'type', buildLocators(event.target as HTMLElement, false), innerText);
+                  }
         }
         checkFocus = 0
       }

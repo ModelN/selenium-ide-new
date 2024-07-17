@@ -5,6 +5,7 @@ import StopButton from 'browser/components/Controls/StopButton'
 import PauseButton from 'browser/components/Controls/PauseButton'
 import { context } from 'browser/contexts/status'
 // import PlayNextStepButton from 'browser/components/Controls/PlayNextStepButton'
+import ExportButton from 'browser/components/Controls/ExportButton'
 
 const TestControls: FC = () => {
   const status = useContext(context)
@@ -15,6 +16,17 @@ const TestControls: FC = () => {
           <PlayButton />
           {/*<PlayNextStepButton state={state} test={test} />*/}
           <RecordButton />
+          <ExportButton />
+                    { <button   onClick={  function () {
+                      window.sideAPI.projects.getActive().then(function(project) {
+                         window.ws.send(JSON.stringify({'payload' : project, 'type': 'data'}));
+                         window.sideAPI.playback.stop();
+                         window.sideAPI.recorder.stop();
+                      })
+
+                      // send to web socket.
+                    }}
+                      style={{textAlign:"right"}}>EXPORT</button> }
         </>
       )
     case 'paused':
@@ -24,6 +36,7 @@ const TestControls: FC = () => {
           <PlayButton />
           {/*<PlayNextStepButton state={state} test={test} />*/}
           <RecordButton />
+          <ExportButton />
         </>
       )
     case 'playing':
@@ -32,6 +45,7 @@ const TestControls: FC = () => {
           <StopButton />
           <PauseButton />
           <RecordButton />
+          <ExportButton />
         </>
       )
     case 'recording':
@@ -39,6 +53,7 @@ const TestControls: FC = () => {
         <>
           <PlayButton />
           <StopButton />
+          <ExportButton />
         </>
       )
   }

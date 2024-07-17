@@ -49,6 +49,24 @@ const getFrameTraversalCommands = (
   }
 }
 
+const actionCommentMap : any = {
+  'click' : 'Click on',
+  'type' : 'Entering',
+  'select' : 'Selecting',
+  'readDataFromUI' : 'Reading',
+  'readElementAttribute' : 'Reading Attribute',
+  'readElementStyle' : 'Reading Style',
+  'readElementPresence' : 'Reading Presence',
+  'checkbox': 'Check/Uncheck',
+  'performWait' : 'Wait on',
+  'dragAndDropToObject' : 'Drag',
+  'jsclick' : 'Click on'
+}
+//@ts-ignore
+const actionsReqDetails = ['readElementAttribute', 'readElementStyle', 'performWait', 'ComparisonOfTwoValues'];
+//@ts-ignore
+const ignoreTableDetailsForActions = ['ComparisonOfTwoValues']
+
 export default class RecorderController extends BaseController {
   windowIDs: number[] = []
 
@@ -80,7 +98,7 @@ export default class RecorderController extends BaseController {
     }
     const windows = BrowserWindow.getAllWindows()
     this.windowIDs = windows.map((window) => window.id)
-
+    this.updateCommentInRecordedCommand(cmd.command, cmd.comment, mainCommand)
     commands.push(
       ...getFrameTraversalCommands(
         session.state.recorder.activeFrame,
@@ -89,6 +107,12 @@ export default class RecorderController extends BaseController {
     )
     commands.push(mainCommand)
     return commands
+  }
+
+updateCommentInRecordedCommand(command: string, comment: string | undefined, recCommand: CommandShape) {
+    if (comment && recCommand) {
+      recCommand.comment = (actionCommentMap[command] ? actionCommentMap[command] : command) + ' ' + comment.replace(':', '');
+    }
   }
 
   async requestHighlightElement(fieldName: LocatorFields) {
@@ -158,6 +182,7 @@ export default class RecorderController extends BaseController {
     let playbackWindow = await this.session.windows.getActivePlaybackWindow()
     if (playbackWindow) {
       playbackWindow.focus()
+      this.session.api.recorder.onStartRec.dispatchEvent('');
       return newStepID
     }
 
@@ -181,8 +206,12 @@ export default class RecorderController extends BaseController {
       return newStepID
     }
     const url = new URL(currentCommand.target as string, state.project.url)
-    playback.executor.doOpen(url.toString())
+    playback.executor.doOpen(url.toString())    
     return newStepID
   }
-  async stop() {}
+  async stop(): Promise<string | null> {
+    await this.session.windows.getActivePlaybackWindow()    
+    this.session.api.recorder.onStopRec.dispatchEvent('');
+    return null;
+  }
 }

@@ -67,24 +67,21 @@ export default class ProjectsController {
   }
 
   async new(): Promise<ProjectShape | null> {
-    if (this.loaded) {
-      const confirm = await this.onProjectUnloaded()
-      if (!confirm) {
-        return null
-      }
+    if (this.loaded) {      
     }
     const testID = randomUUID()
     const starterProject: ProjectShape = {
       id: randomUUID(),
       version: '3.0',
-      name: 'New Project',
+      name: 'RTS Recorder',
       url: 'http://www.google.com',
       urls: ['http://www.google.com'],
+      appType:'Base',
       plugins: [],
       suites: [
         {
           id: randomUUID(),
-          name: 'New Suite',
+          name: 'RTS Suite',
           parallel: false,
           persistSession: false,
           tests: [testID],
@@ -94,7 +91,7 @@ export default class ProjectsController {
       tests: [
         {
           id: testID,
-          name: 'New Test',
+          name: 'RTS Test',
           commands: [
             {
               id: randomUUID(),

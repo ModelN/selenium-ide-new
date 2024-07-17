@@ -114,7 +114,7 @@ export const state: StateShape = {
   breakpoints: [],
   commands: Commands,
   editor: defaultEditorState,
-  locators: [
+  locators: [    
     'css:data-test-id',
     'id',
     'linkText',

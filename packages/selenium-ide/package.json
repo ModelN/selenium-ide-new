@@ -8,7 +8,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "clean": "rimraf build dist files node_modules tsconfig.tsbuildinfo",
-    "start": "electron build/main-bundle.js",
+    "start": "set WS_NO_BUFFER_UTIL=false && electron --inspect=9229 build/main-bundle.js ",
     "dev": "SIDE_DEV=1 electron build/main-bundle.js",
     "build": "run-s build:webpack build:electron",
     "build:electron": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -mwl --publish never",

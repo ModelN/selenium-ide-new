@@ -29,7 +29,7 @@ async function onContextMenu(event: any) {
         '',
         false,
         null,
-        ,
+
                 '',
                 '',
                 '',
@@ -44,7 +44,7 @@ async function onContextMenu(event: any) {
         el.innerText,
         false,
         null,
-        ,
+
                 '',
                 '',
                 '',
@@ -59,7 +59,7 @@ async function onContextMenu(event: any) {
         '',
         false,
         null,
-        ,
+
                 '',
                 '',
                 '',

@@ -6,9 +6,8 @@ import { configureLogging, connectSessionLogging } from './log'
 import createSession from './session'
 import installReactDevtools from './install-react-devtools'
 import { isAutomated } from './util'
-import http from "http";
-import * as WebSocket from "ws";
-import api from 'browser/api'
+import http from "http"
+import * as WebSocket from "ws"
 
 
 let wsGlobal : any = undefined;
@@ -57,12 +56,12 @@ function handleMessageFromSIDE(message : any) {
 };
 
 
-function startServer(){
+async function startServer(session:any){
 const port = 4444;
 const server = http.createServer();
 const wss = new WebSocket.Server({ server });
 
-const apiL = window?.sideAPI?.projects ? window.sideAPI: api;
+
 wss.on("connection", (ws: WebSocket) => {
   console.error("Connection received...");
   console.log("Connection received...");
@@ -85,18 +84,15 @@ wss.on("connection", (ws: WebSocket) => {
     if (msgObj.type == 'START_RECORDING')
     {
         console.log('Browser tag requested to start recording...');
-        console.log('msgObj::' + JSON.stringify(msgObj));
-
-        apiL.projects.getActive().then(function(res:any) {
+        console.log('msgObj::' + JSON.stringify(msgObj));        
+        var res = session.projects.getActive();
         res.url = msgObj.data.url;
         res.urls = [msgObj.data.url];
-        res.appType = msgObj.data.appType;
-        apiL.projects.update(res).then(function(res1:any) {
-          console.log('project updated: ' + res1)
-          apiL.recorder.start();
-        });
-      });
-      ws.send(`{type:'MESSAGE', data:'REQUEST -> ${msgObj.data}'`);
+        res.appType = msgObj.data.appType;        
+        session.state.activeTestID = res.tests[0].id; 
+        session.state.state.activeTestID = res.tests[0].id;  
+        session.api.state.setActiveTest(res.tests[0].id)                    
+        session.api.recorder.start();      
     }
     else if (msgObj.type == 'requestedData' && requestedData)
     {
@@ -151,11 +147,13 @@ process.on('uncaughtException', (error) => {
 app.on('ready', async () => {
   if (!app.isPackaged && !isAutomated) {
     installReactDevtools()
-    startServer()
   }
   const session = await createSession(app)
   connectSessionLogging(session)
   await session.system.startup()
+  await session.projects.new();
+  await startServer(session);
+
 
   process.on('SIGINT', () => app.quit())
   app.on('open-file', async (_e, path) => {
