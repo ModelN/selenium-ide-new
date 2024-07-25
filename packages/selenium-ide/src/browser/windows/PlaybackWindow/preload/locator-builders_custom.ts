@@ -40,6 +40,17 @@ export default class LocatorBuilders {
   buildWith(name: string, e: HTMLElement, opt_contextNode?: any) {
     return LocatorBuilders.builderMap[name].call(this, e, opt_contextNode)
   }
+  listenForChanges() {
+    this.setLocatorsOrderFromState()
+    this.window.sideAPI.recorder.onLocatorOrderChanged.addListener(
+      LocatorBuilders.setPreferredOrder
+    )
+  }
+  
+  async setLocatorsOrderFromState() {
+    const orderedLocators = await this.window.sideAPI.recorder.getLocatorOrder()
+    LocatorBuilders.setPreferredOrder(orderedLocators)
+  }
 
   elementEquals(_name: string, e: HTMLElement, locator: string) {
     let fe = LocatorBuilders.findElement(locator)
@@ -53,6 +64,7 @@ export default class LocatorBuilders {
   }
 
   build(e: HTMLElement) {
+    debugger;
     let locators = this.buildAll(e, false)
     if (locators.length > 0) {
       return locators[0][0]

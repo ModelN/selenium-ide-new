@@ -1,6 +1,6 @@
 import 'v8-compile-cache'
 import 'source-map-support/register'
-import { app } from 'electron'
+import { app , ipcMain} from 'electron'
 import { autoUpdater } from 'electron-updater'
 import { configureLogging, connectSessionLogging } from './log'
 import createSession from './session'
@@ -69,7 +69,7 @@ wss.on("connection", (ws: WebSocket) => {
   //   wsGlobal.disconnect();
   // }
   wsGlobal = ws;
-    ws.on("message", (message: string) => {
+    ws.on("message", async (message: string) => {
     console.log("Received the message::" + message);
     //log the received message and send it back to the client
     let msgObj : any;
@@ -92,7 +92,7 @@ wss.on("connection", (ws: WebSocket) => {
         session.state.activeTestID = res.tests[0].id; 
         session.state.state.activeTestID = res.tests[0].id;  
         session.api.state.setActiveTest(res.tests[0].id)                    
-        session.api.recorder.start();      
+        await session.api.recorder.start();      
     }
     else if (msgObj.type == 'requestedData' && requestedData)
     {
@@ -108,7 +108,11 @@ wss.on("connection", (ws: WebSocket) => {
     }
 
   });
-
+  
+  ipcMain.on('SIDEToScripter', (event, msg) => {
+    handleMessageFromSIDE(msg);
+    event.returnValue = true;
+  })
   //send immediatly a feedback to the incoming connection
   ws.send("Hi there, I am a WebSocket server");
 });
@@ -149,10 +153,11 @@ app.on('ready', async () => {
     installReactDevtools()
   }
   const session = await createSession(app)
-  connectSessionLogging(session)
-  await session.system.startup()
-  await session.projects.new();
+  connectSessionLogging(session)  
+  await session.system.startup();  
+  await session.api.projects.new();  
   await startServer(session);
+
 
 
   process.on('SIGINT', () => app.quit())

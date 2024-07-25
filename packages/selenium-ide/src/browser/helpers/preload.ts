@@ -67,6 +67,7 @@ type ApiWithMutators = Api & {
 export default async (api: NestedPartial<Api>, ...cbs: (() => void)[]) => {
   window.sideAPI = {
     ...api,
+    projects: api.projects,
     mutators: getApiSubset(mutators, api),
   } as ApiWithMutators
   if (cbs?.length) {

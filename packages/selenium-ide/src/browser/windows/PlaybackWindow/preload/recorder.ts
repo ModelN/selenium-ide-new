@@ -73,12 +73,12 @@ export default class Recorder {
     this.window.sideAPI.recorder.getWinHandleId().then((id) => {
       this.winHandleId = id
     })
-    this.window.sideAPI.recorder.onStartRec.removeListener(
-      this.attach
-    )
-    this.window.sideAPI.recorder.onStopRec.removeListener(
-      this.detach
-    )
+    // this.window.sideAPI.recorder.onStartRec.removeListener(
+    //   this.attach
+    // )
+    // this.window.sideAPI.recorder.onStopRec.removeListener(
+    //   this.detach
+    // )
     handlers.forEach((handler) => {
       this.addEventHandler(...handler)
     })
@@ -136,6 +136,7 @@ export default class Recorder {
           newCommand = result.command
       }
     }
+    debugger;
     window.sideAPI.recorder.recordNewCommand(newCommand, overrideRecorder)
   }
 
@@ -173,7 +174,7 @@ export default class Recorder {
 
   attach() {
     debugger;
-    console.log('**************: ');
+    console.debug('**************: ');
     if (!this.attached) {
       // @ts-expect-error
       this.window.addEventListener('message', this.setWindowHandle)
@@ -285,6 +286,7 @@ updateAppType() {
       this.eventHandlers[key] = []
     }
     this.eventHandlers[key].push(handler)
+    console.debug("##########"+handler)
   }
 
   addMutationObserver(

@@ -30,7 +30,7 @@ const ProjectEditor = () => {
 
   return (
     <AppWrapper>
-      /*<Grid className="centered pt-4" container spacing={2}>
+      <Grid className="centered pt-4" container spacing={2}>
         <Grid item xs={12}>
           <Typography variant="h4">
             <FormattedMessage id={languageMap.splash.present} /></Typography>
@@ -73,7 +73,7 @@ const ProjectEditor = () => {
             ))}
           </List>
         </Grid>
-      </Grid>*/
+      </Grid>
     </AppWrapper>
   )
 }

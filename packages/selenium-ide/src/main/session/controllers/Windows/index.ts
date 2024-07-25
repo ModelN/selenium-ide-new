@@ -391,6 +391,7 @@ export default class WindowsController extends BaseController {
       height: correctedDims.height,
       parent: await this.session.windows.get(projectEditorWindowName),
       webPreferences: {
+        devTools:true,
         partition: persistSession ? playingSuite : `playback-${partition++}`,
         zoomFactor: correctedDims.zoomFactor,
       },
@@ -518,7 +519,7 @@ export default class WindowsController extends BaseController {
       this.session.api.windows.onPlaybackWindowOpened.dispatchEvent(window.id, {
         test: testName,
         title: 'New tab',
-        url: window.webContents.getURL(),
+        url: window.webContents.getURL()        
       })
     } else {
       this.session.api.windows.onPlaybackWindowOpened.dispatchEvent(window.id, {

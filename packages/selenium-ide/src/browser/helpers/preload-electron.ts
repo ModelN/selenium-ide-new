@@ -1,5 +1,5 @@
 import api from 'browser/api'
-import { contextBridge, webFrame } from 'electron'
+import { contextBridge, webFrame, ipcRenderer } from 'electron'
 import preload from './preload'
 
 export const cb = (isWebdriver: boolean) => () => new Promise<void>((resolve) => {
@@ -18,6 +18,10 @@ export const cb = (isWebdriver: boolean) => () => new Promise<void>((resolve) =>
       })
     `)
     contextBridge.exposeInMainWorld('sideAPI', window.sideAPI)
+    contextBridge.exposeInMainWorld('ws',
+    {
+      send: (data:any) => ipcRenderer.send('SIDEToScripter',data)
+    })
     const preloads = await window.sideAPI.plugins.getPreloads()
     for (const preload of preloads) {
       try {

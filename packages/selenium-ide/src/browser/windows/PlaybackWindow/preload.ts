@@ -68,6 +68,7 @@ preload(
       getPreloads: api.plugins.getPreloads,
     },
     recorder: api.recorder,
+    projects: api.projects
   },
   ElectronInit(true),
   injectRecorder
