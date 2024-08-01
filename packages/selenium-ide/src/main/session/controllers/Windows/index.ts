@@ -23,6 +23,7 @@ const playbackWindowOptions = {
   ...playbackWindowOpts(),
   webPreferences: {
     devTools: true,
+    nodeIntegrationInSubFrames: true,
     preload: join(__dirname, `playback-window-preload-bundle.js`),
   },
 }
@@ -58,6 +59,7 @@ const windowLoaderFactoryMap: WindowLoaderFactoryMap = Object.fromEntries(
             ..._options,
             webPreferences: {
               devTools: true,
+              nodeIntegrationInSubFrames: true,
               ...(windowConfig?.webPreferences ?? {}),
               preload: hasPreload ? preloadPath : undefined,
               sandbox: true,
@@ -297,6 +299,7 @@ export default class WindowsController extends BaseController {
       webPreferences: {
         // This should be the default preload, which just adds the sideAPI to the window
         preload: join(__dirname, `project-editor-preload-bundle.js`),
+        nodeIntegrationInSubFrames: true,
         ...(opts?.webPreferences ?? {}),
       },
       show: false,
@@ -392,6 +395,7 @@ export default class WindowsController extends BaseController {
       parent: await this.session.windows.get(projectEditorWindowName),
       webPreferences: {
         devTools:true,
+        nodeIntegrationInSubFrames: true,
         partition: persistSession ? playingSuite : `playback-${partition++}`,
         zoomFactor: correctedDims.zoomFactor,
       },
@@ -556,6 +560,7 @@ export default class WindowsController extends BaseController {
           height: size[1],
           webPreferences: {
             ...playbackWindowOptions.webPreferences,
+            nodeIntegrationInSubFrames: true,
             preload: this.session.system.isDev
               ? `http://localhost:8083/playback-window-preload-bundle.js`
               : join(__dirname, `playback-window-preload-bundle.js`),

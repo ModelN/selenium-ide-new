@@ -66,6 +66,36 @@ async function onContextMenu(event: any) {
                 false
       )
       break
+      case 'Mouse Over':
+      recorder.record(
+        event,
+        'mouseOver',
+        targets,
+        '',
+        false,
+        null,
+
+                '',
+                '',
+                '',
+                false
+      )
+      break
+      case 'JS Click':
+      recorder.record(
+        event,
+        'jsclick',
+        targets,
+        '',
+        false,
+        null,
+
+                '',
+                '',
+                '',
+                false
+      )
+      break
   }
 }
 

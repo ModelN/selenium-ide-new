@@ -42,6 +42,14 @@ export const commands: MenuComponent =
         accelerator: '4',
         label: 'Record Wait For Element Editable',
       },
+      {
+        accelerator: '5',
+        label: 'Mouse Over',
+      },
+      {
+        accelerator: '6',
+        label: 'JS Click',
+      },
     ]
 
 export default menuFactoryFromCommandFactory(commands)
