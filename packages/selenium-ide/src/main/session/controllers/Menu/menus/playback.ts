@@ -50,6 +50,14 @@ export const commands: MenuComponent =
         accelerator: '6',
         label: 'JS Click',
       },
+      {
+        accelerator: '7',
+        label: 'tableRowCriteriaData',
+      },
+      {
+        accelerator: '8',
+        label: 'readDataFromUI',
+      }
     ]
 
 export default menuFactoryFromCommandFactory(commands)

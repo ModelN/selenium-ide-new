@@ -92,13 +92,13 @@ function getCustomDisplayNameFn(e: any) {
 }
 
 function table(e: any) {
-    var recordedType: any;
-    var additionalData: any;
+    var recordedType: any;    
+    var additionalData: any = {};
     if (e.closest('div[class*=labeledGroup]'))
         return null;
     var elXpath = getXpathOfAnElement(e, true);
     if (elXpath) {
-        var parXpath = elXpath + '/ancestor::tr[contains(@class,\'tableRow bodyRow bodyRow-\') or contains(@class,\'tableRow headerRow headerRow-\') ' +
+        var parXpath = 'xpath=' + elXpath + '/ancestor::tr[contains(@class,\'tableRow bodyRow bodyRow-\') or contains(@class,\'tableRow headerRow headerRow-\') ' +
             'or contains(@class,\'tableRow footerRow footerRow-\')]';
         var tdEl = LocatorBuilders.findElement(parXpath);
         if (tdEl) {
@@ -123,10 +123,11 @@ function table(e: any) {
             else if (nodeName == 'img')
                 elementType = 'IMAGE'
             if (!recordedType) {
-                recordedType = 'table';
-                additionalData.rowType = rowType;
-                additionalData.elementType = elementType;
+                LocatorBuilders.recordedType = 'table';
+                additionalData['rowType'] = rowType;
+                additionalData['elementType'] = elementType;
             }
+            LocatorBuilders.additionalData = additionalData
             return 'table=' + elXpath;
         }
     }
@@ -157,25 +158,25 @@ function xpathComppath(e: any) {
                 let labelLoc = '//' + LocatorBuilders.xpathHtmlElement(isCurrElHaveComppath?e.nodeName.toLowerCase():e.parentNode.nodeName.toLowerCase()) + '[@comppath=' + LocatorBuilders.attributeValue(comppath) + ']' +
                     '/ancestor::tr[contains(@class, \'tableRow bodyRow\')]/td[1]/span';
                 let labelEl = LocatorBuilders.findElement(labelLoc);
-                var additionalData: any;
+                var additionalData: any={};
                 if (labelEl && labelEl.innerText) {
                     var labelText = LocatorBuilders.getInnerTextWithoutChildren(labelEl).replace(':','')
-                    additionalData = labelText
+                    LocatorBuilders.additionalData = labelText
                     let finalLoc = '//td[(normalize-space(.)=\'' + labelText + '\' or normalize-space(.)=\'' + labelText + ':\')]//following::' + locator.substring(2);
                     if (comppath.indexOf('spreadsheetContainer.FormularyCondition') > -1) {
                         let labelParLoc = labelLoc + '/ancestor::div[contains(@comppath,\'spreadsheetContainer.FormularyCondition\')]//div[contains(@class,\'title\')]';
                         let labelParEl = LocatorBuilders.findElement(labelParLoc);
                         if (labelParEl && labelParEl.innerText) {
                             var labelParText = LocatorBuilders.getInnerTextWithoutChildren(labelParEl)
-                            additionalData = labelParText + '->' + additionalData
+                            LocatorBuilders.additionalData = labelParText + '->' + additionalData
                             finalLoc = '//div[(translate(normalize-space(.),\'abcdefghijklmnopqrstuvwxyz\',\'ABCDEFGHIJKLMNOPQRSTUVWXYZ\')=translate(\'' + labelParText + '\',\'abcdefghijklmnopqrstuvwxyz\',\'ABCDEFGHIJKLMNOPQRSTUVWXYZ\'))]' +
                                 '//following::' + finalLoc.substring(2);
                         }
                     }
                     //this.logging('Final Locator: ' + finalLoc);
                     if (e == LocatorBuilders.findElement(finalLoc)) {
-                        if (additionalData) {
-                            additionalData.innerText = additionalData;
+                        if (LocatorBuilders.additionalData) {
+                            LocatorBuilders.additionalData.innerText = additionalData;
                             // if (e.nodeName.toLowerCase() == 'a')
                             //     displayName = labelText + ' chooser';
                         }
@@ -279,7 +280,7 @@ function xpathComppathRelative(e: any) {
 
 function leftNav(e: any) {
     var recordedType: any;
-    var additionalData: any;
+    var additionalData: any = {};
     var current = e;
     if (current.parentNode != null) {
         var parentNode = current.parentNode;
@@ -343,6 +344,7 @@ function leftNav(e: any) {
                         curElXpathWithForm = curElXpathWithForm + 'contains(@name,\'' + formNameAttr + '\')';
                     elXpath = curElXpathWithForm + ']//' + elXpath;
                 }
+                LocatorBuilders.additionalData = additionalData;
                 return "xpath=//" + elXpath;
             }
         }

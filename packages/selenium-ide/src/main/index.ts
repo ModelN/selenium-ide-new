@@ -33,7 +33,7 @@ function handleMessageFromSIDE(message : any) {
     case "showModal":
       if (wsGlobal) {
         requestedData = true;
-        wsGlobal.send({type: 'showModal', payload: message.payload});
+        wsGlobal.send(JSON.stringify({type: 'showModal', payload: message.payload}));
         // focusSourceTab();
         // var modalHandler = function(request) {
         //   if (request.type == 'requestedData' ) {
@@ -109,12 +109,11 @@ wss.on("connection", (ws: WebSocket) => {
 
   });
   
-  ipcMain.on('SIDEToScripter', (event, msg) => {
+  ipcMain.on('SIDEToScripter', (msg) => {
     handleMessageFromSIDE(msg);
-    event.returnValue = true;
+    //event.returnValue = true;
   })
-  //send immediatly a feedback to the incoming connection
-  ws.send("Hi there, I am a WebSocket server");
+  //send immediatly a feedback to the incoming connection  
 });
 
 //start our server
