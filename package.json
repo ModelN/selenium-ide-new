@@ -10,6 +10,7 @@
     "build:electron:mac": "pnpm run --stream --filter selenium-ide build:electron:mac",
     "build:ide": "pnpm run --stream --filter selenium-ide build:webpack",
     "build:ts": "tsc --build --verbose",
+    "publish": "pnpm run --stream --filter selenium-ide publish:electron:windows",
     "clean:deps": "rimraf packages/*/node_modules node_modules",
     "clean": "rimraf packages/*/build packages/*/dist packages/*/node_modules packages/*/tsconfig.tsbuildinfo node_modules",
     "clean:nuke": "git clean -fdx",

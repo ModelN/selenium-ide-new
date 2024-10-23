@@ -1,6 +1,6 @@
 {
   "name": "selenium-ide",
-  "version": "4.0.1-beta.12",
+  "version": "v1.2.0",
   "private": false,
   "description": "Selenium IDE electron app",
   "author": "Todd <tarsitodd@gmail.com>",
@@ -11,7 +11,7 @@
     "start": "set WS_NO_BUFFER_UTIL=false && electron --inspect=9229 build/main-bundle.js ",
     "dev": "SIDE_DEV=1 electron build/main-bundle.js",
     "build": "run-s build:webpack build:electron",
-    "build:electron": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -mwl --publish never",
+    "build:electron": "electron-builder",
     "build:electron:dir": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --dir",
     "build:electron:mac": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -m --publish never",
     "build:webpack": "webpack",
@@ -30,7 +30,7 @@
   "main": "build/main-bundle.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SeleniumHQ/selenium-ide.git"
+    "url": "https://github.com/ModelN/selenium-ide-new"
   },
   "bugs": {
     "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
@@ -83,8 +83,9 @@
       "publish": [
         {
           "provider": "github",
-          "owner": "SeleniumHQ",
-          "repo": "selenium-ide"
+          "owner": "ModelN",
+          "repo": "selenium-ide-new",
+          "releaseType" :"release"
         }
       ],
       "target": "nsis"
@@ -159,6 +160,7 @@
     "@types/react-dom": "^18.2.7",
     "@types/selenium-webdriver": "^4.1.22",
     "@types/webpack-env": "^1.16.0",
+    "@types/ws": "^8.5.10",
     "copy-webpack-plugin": "^10.2.4",
     "css-loader": "^6.8.1",
     "electron": "^28.2.0",

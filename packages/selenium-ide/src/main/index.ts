@@ -100,6 +100,11 @@ wss.on("connection", (ws: WebSocket) => {
       console.log('ModalData From WebApp: ' + JSON.stringify(msgObj.payload));
       // sendResponse({data: request.payload});
       // tabPort.onMessage.removeListener(modalHandler);
+      var res = session.projects.getActive();
+      session.state.activeTestID = res.tests[0].id; 
+      session.state.state.activeTestID = res.tests[0].id;  
+      session.api.state.setActiveTest(res.tests[0].id) 
+      session.api.recorder.start();
     }
     else
     {

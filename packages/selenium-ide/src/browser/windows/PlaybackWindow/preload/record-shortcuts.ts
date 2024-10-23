@@ -117,7 +117,7 @@ async function onContextMenu(event: any) {
       break
       case 'readDataFromUI':
         var tagName = event.target.nodeName.toLowerCase();
-        let value = event.target.value ? event.target.value :  event.target.getVisibleText();
+        let value = event.target.value ? event.target.value :  event.target.textContent;
         //for dropdown, get the label of selected option
         if (tagName == 'select' || tagName == 'option') {
           value = getOptionLocator(event.target.options[event.target.selectedIndex]);
