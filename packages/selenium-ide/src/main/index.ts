@@ -1,6 +1,6 @@
 import 'v8-compile-cache'
 import 'source-map-support/register'
-import { app , ipcMain} from 'electron'
+import { app , ipcMain, dialog} from 'electron'
 import { autoUpdater } from 'electron-updater'
 import { configureLogging, connectSessionLogging } from './log'
 import createSession from './session'
@@ -12,6 +12,18 @@ import * as WebSocket from "ws"
 
 let wsGlobal : any = undefined;
 let requestedData:boolean = false;
+
+autoUpdater.checkForUpdatesAndNotify();
+
+autoUpdater.on('update-available', () => {
+  log.info('Update available.');
+});
+
+autoUpdater.on('update-downloaded', () => {
+  log.info('Update downloaded.');
+  autoUpdater.quitAndInstall();
+});
+
 // @ts-ignore
 function handleMessageFromSIDE(message : any) {
   message = JSON.parse(message);
@@ -100,11 +112,6 @@ wss.on("connection", (ws: WebSocket) => {
       console.log('ModalData From WebApp: ' + JSON.stringify(msgObj.payload));
       // sendResponse({data: request.payload});
       // tabPort.onMessage.removeListener(modalHandler);
-      var res = session.projects.getActive();
-      session.state.activeTestID = res.tests[0].id; 
-      session.state.state.activeTestID = res.tests[0].id;  
-      session.api.state.setActiveTest(res.tests[0].id) 
-      session.api.recorder.start();
     }
     else
     {
@@ -151,8 +158,38 @@ process.on('uncaughtException', (error) => {
   console.error('Unhandled Error', error)
 })
 
+autoUpdater.on('update-not-available', () => {
+  log.info('Update not available.');
+});
+
+autoUpdater.on('error', (error) => {
+  log.error('Update error: ' + error);
+});
+
+autoUpdater.on('download-progress', (progressObj) => {
+  let logMessage = `Download speed: ${progressObj.bytesPerSecond}`;
+  logMessage += ` - Downloaded ${progressObj.percent}%`;
+  logMessage += ` (${progressObj.transferred} of ${progressObj.total})`;
+  log.info(logMessage);
+});
+
+autoUpdater.on('update-downloaded', () => {
+  log.info('Update downloaded');
+  dialog
+    .showMessageBox({
+      type: 'info',
+      buttons: ['Restart', 'Later'],
+      title: 'Application Update',
+      message: 'New version available. Restart to apply updates?',
+    })
+    .then((result) => {
+      if (result.response === 0) autoUpdater.quitAndInstall();
+    });
+});
+
 // Start and stop hooks
 app.on('ready', async () => {
+  autoUpdater.checkForUpdates();
   if (!app.isPackaged && !isAutomated) {
     installReactDevtools()
   }
