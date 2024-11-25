@@ -26,7 +26,8 @@
   },
   "devDependencies": {
     "@seleniumhq/get-driver": "4.0.10",
-    "@seleniumhq/side-testkit": "4.0.10"
+    "@seleniumhq/side-testkit": "4.0.10",
+    "@seleniumhq/webdriver-testkit": "4.0.10"
   },
   "dependencies": {
     "@seleniumhq/side-commons": "4.0.10",
