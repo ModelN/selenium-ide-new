@@ -1,6 +1,6 @@
 {
   "name": "selenium-ide",
-  "version": "v1.2.0",
+  "version": "v1.4.4",
   "private": false,
   "description": "Selenium IDE electron app",
   "author": "Todd <tarsitodd@gmail.com>",
@@ -53,18 +53,7 @@
     "directories": {
       "buildResources": "resources"
     }, 
-    "productName": "Selenium IDE",
-    "mac": {
-      "target": {
-        "target": "default",
-        "arch": "universal"
-      },
-      "singleArchFiles": "*",
-      "x64ArchFiles": "*",
-      "mergeASARs": false,
-      "category": "public.app-category.developer-tools",
-      "darkModeSupport": true
-    },
+    "productName": "RTS Recorder",    
     "dmg": {
       "contents": [
         {
@@ -164,7 +153,8 @@
     "copy-webpack-plugin": "^10.2.4",
     "css-loader": "^6.8.1",
     "electron": "^28.2.0",
-    "electron-builder": "^24.9.1",
+    "electron-builder": "^22.14.13",
+    "update-notifier": "^5.1.0",
     "electron-devtools-installer": "^3.2.0",
     "fork-ts-checker-webpack-plugin": "^8.0.0",
     "html-webpack-plugin": "^5.5.3",

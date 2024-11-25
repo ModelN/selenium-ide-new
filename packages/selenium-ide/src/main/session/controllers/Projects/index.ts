@@ -195,7 +195,7 @@ export default class ProjectsController {
   }
 
   async save_v3(filepath: string): Promise<boolean> {
-    await fs.writeFile(filepath, JSON.stringify(this.project, ['id','version','name','url','tests','id','name','commands','comment','command','target','targets','value'], 2))
+    await fs.writeFile(filepath, JSON.stringify(this.project, ['tests','commands','comment','command','target','value'], 2))
     this.recentProjects.add(filepath)
     this.session.projects.filepath = filepath
     return true

@@ -229,10 +229,13 @@ app.on('ready', async () => {
   app.on('window-all-closed', async () => {
     allWindowsClosed = true
     if (process.platform === 'darwin') {
-      await session.system.shutdown()
+      await session.system.shutdown() 
+      await session.system.quit()     
     } else {
+      await session.system.shutdown()
       await session.system.quit()
     }
+    await app.quit();
   })
 
   app.on(
