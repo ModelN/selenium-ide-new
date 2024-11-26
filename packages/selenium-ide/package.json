@@ -135,7 +135,7 @@
     "react-resizable-panels": "^1.0.8",
     "scroll-into-view-if-needed": "^3.0.10",
     "selenium-webdriver": "^4.20.0",
-    "side-code-export": "^4.0.10",
+    "side-code-export": "4.0.10",
     "v8-compile-cache": "^2.3.0"
   },
   "devDependencies": {
@@ -149,7 +149,7 @@
     "@types/react-dom": "^18.2.7",
     "@types/selenium-webdriver": "^4.1.22",
     "@types/webpack-env": "^1.16.0",
-    "@types/ws": "^8.5.10",
+    "ws": "^8.10.0",
     "copy-webpack-plugin": "^10.2.4",
     "css-loader": "^6.8.1",
     "electron": "^28.2.0",

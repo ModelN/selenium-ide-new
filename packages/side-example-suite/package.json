@@ -17,7 +17,7 @@
     "watch": "tsc --watch"
   },
   "dependencies": {
-    "side-code-export": "^4.0.10",
+    "side-code-export": "4.0.10",
     "@seleniumhq/code-export-python-pytest": "4.0.10"
   },
   "devDependencies": {
