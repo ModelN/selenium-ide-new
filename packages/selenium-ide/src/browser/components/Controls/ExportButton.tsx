@@ -10,9 +10,7 @@ const ExportButton: FC = () => (
         {...baseControlProps}
         onClick={  function () {
             window.sideAPI.projects.getActive().then(function(project) {
-               window.ws.send(JSON.stringify({'payload' : project, 'type': 'data'}));
-               window.sideAPI.playback.stop();
-               window.sideAPI.recorder.stop();
+               window.ws.send(JSON.stringify({'payload' : project, 'type': 'data'}));                
             })
 
             // send to web socket.

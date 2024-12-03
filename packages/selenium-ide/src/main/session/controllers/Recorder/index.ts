@@ -1,6 +1,7 @@
 import { CommandShape } from '@seleniumhq/side-model'
 import {
   getActiveCommand,
+  getActiveTest,
   getActiveCommandIndex,
   getActiveWindowHandleID,
 } from '@seleniumhq/side-api/dist/helpers/getActiveData'
@@ -173,22 +174,26 @@ updateCommentInRecordedCommand(command: string, comment: string | undefined, rec
     // }
     var getResponseFromWebApp = function() {
       if (actionsReqDetails.indexOf(message.command) > -1) {
-        self.session.api.recorder.stop();
+        // self.session.api.recorder.stop();
         var dataInputToWebapp = {modalType: message.command, data: { comment : message.comment}};
-        // var callbackFn = function(response:any) {
-        //   // if (isUserClicksOnCancel(response)) {
-        //   //   return;
-        //   // }
-        //   recCommand.otherData = response.data;
-        //   if (ignoreTableDetailsForActions.indexOf(message.command) > -1 && message.recordedType == 'table') {
-        //     var newTarget = message.target && message.target[1] ? message.target[1][0] : message.target[0][0];
-        //     recCommand.target = newTarget;
-        //   }
-        //   self.session.api.recorder.start();
-        // }
-        self.updateDataFromWebAppInRecCommand(dataInputToWebapp, true);
+        var callbackFn = function(response:any) {
+          // if (isUserClicksOnCancel(response)) {
+          //   return;
+          // }
+          response = JSON.parse(response);
+          const activeTest = getActiveTest(self.session.state.get())
+          recCommand = activeTest.commands[activeTest.commands.length-1]
+          recCommand.otherData = response;
+          if (ignoreTableDetailsForActions.indexOf(message.command) > -1 && message.recordedType == 'table') {
+            var newTarget = message.target && message.target[1] ? message.target[1][0] : message.target[0][0];
+            recCommand.target = newTarget;
+          }
+          // self.session.api.recorder.start();
+        }
+        self.updateDataFromWebAppInRecCommand(dataInputToWebapp, callbackFn, true);
       } else
-      self.session.api.recorder.start();
+      // self.session.api.recorder.start();
+      console.log();
     }
     if (message.recordedType) {
       if (message.recordedType == 'table' && ignoreTableDetailsForActions.indexOf(message.command) == -1) {
@@ -232,26 +237,29 @@ updateCommentInRecordedCommand(command: string, comment: string | undefined, rec
           newTableData[0].SelectColumn[0].elementType = elementType
         }*/
         var selectTableData = {modalType: 'SelectTable', data: newTableData};
-        // var callbackFn = function(response:any) {
-        //   //If user click on cancel in table view
-        //   // if (isUserClicksOnCancel(response)) {
-        //   //   return;
-        //   // }
-        //   recCommand.otherData = response.data;
-        //   //tableData = response.data
-        //   var newComm = ''
-        //   if (response.data[0] && response.data[0].SelectColumn && response.data[0].SelectColumn[0] && response.data[0].SelectColumn[0]) {
-        //     var colData = response.data[0].SelectColumn[0];
-        //     newComm = (colData.columnName && colData.columnName != '' ? colData.columnName : (colData.columnType && colData.columnType != '' ? colData.columnType : ''))
-        //   }
-        //   if (newComm != '') {
-        //     newComm = (message.comment ? message.comment + ' in ' + newComm + ' column' : newComm + ' column')
-        //     self.updateCommentInRecordedCommand(message.command, newComm, recCommand);
-        //   }
-        //   getResponseFromWebApp();
-        // }
-        self.session.api.recorder.stop();
-        this.updateDataFromWebAppInRecCommand(selectTableData, actionsReqDetails.indexOf(message.command) > -1);
+        var callbackFn = function(response:any) {
+          //If user click on cancel in table view
+          // if (isUserClicksOnCancel(response)) {
+          //   return;
+          // }
+          response = JSON.parse(response);
+          const activeTest = getActiveTest(self.session.state.get())
+          recCommand = activeTest.commands[activeTest.commands.length-1]                    
+          recCommand.otherData = response;
+          //tableData = response.data
+          var newComm = ''
+          if (response[0] && response[0].SelectColumn && response[0].SelectColumn[0] && response[0].SelectColumn[0]) {
+            var colData = response[0].SelectColumn[0];
+            newComm = (colData.columnName && colData.columnName != '' ? colData.columnName : (colData.columnType && colData.columnType != '' ? colData.columnType : ''))
+          }
+          if (newComm != '') {
+            newComm = (message.comment ? message.comment + ' in ' + newComm + ' column' : newComm + ' column')
+            self.updateCommentInRecordedCommand(message.command, newComm, recCommand);
+          }
+          getResponseFromWebApp();
+        }
+        // self.session.api.recorder.stop();
+        this.updateDataFromWebAppInRecCommand(selectTableData,callbackFn, actionsReqDetails.indexOf(message.command) > -1);
       } else if (message.recordedType == 'leftNav' || message.recordedType == 'locatorHavingData') {
         this.setAdditionalData(message, recCommand);
       }
@@ -279,14 +287,17 @@ updateCommentInRecordedCommand(command: string, comment: string | undefined, rec
     }
   };
 
-  updateDataFromWebAppInRecCommand(data:any,  noToggling:boolean) {    
+  updateDataFromWebAppInRecCommand(data:any, callbackFn:any, noToggling:boolean) {    
     if (!noToggling)
-      this.session.api.recorder.stop();
-    ipcMain.emit('SIDEToScripter', JSON.stringify({type: 'showModal', payload: data}))
-    // browser.runtime.sendMessage({type: 'showModal', payload: data}).then(function(response:any) {
-      //  callbackFn();
-    //   if (!noToggling)
-    //     window.sideAPI.recorder.start();
+      console.log();
+      // this.session.api.recorder.stop();
+    ipcMain.emit('SIDEToScripter', '',JSON.stringify({type: 'showModal', payload: data}))
+    ipcMain.on('RequestedDataFromScripter', (msg) => {
+      callbackFn(msg);     
+    })
+    // browser.runtime.sendMessage({type: 'showModal', payload: data}).then(function(response:any) {        
+       //if (!noToggling)
+      //this.session.api.recorder.start();
     // });
   }
 

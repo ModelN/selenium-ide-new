@@ -142,7 +142,8 @@ async function onContextMenu(event: any) {
 
 export function attach(_recorder: Recorder) {
   recorder = _recorder
-  window.addEventListener('contextmenu', onContextMenu)
+  window.addEventListener('contextmenu', onContextMenu, true)
+  window.setTimeout(function (){window.addEventListener('contextmenu', onContextMenu, true)} , 2000)
 }
 const nbsp = String.fromCharCode(160)
 function getOptionLocator(option: HTMLOptionElement) {

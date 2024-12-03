@@ -1,6 +1,6 @@
 {
   "name": "selenium-ide",
-  "version": "v1.4.4",
+  "version": "v1.4.5",
   "private": false,
   "description": "Selenium IDE electron app",
   "author": "Todd <tarsitodd@gmail.com>",

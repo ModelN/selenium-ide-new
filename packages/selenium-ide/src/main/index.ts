@@ -10,7 +10,7 @@ import http from "http"
 import * as WebSocket from "ws"
 
 
-let wsGlobal : any = undefined;
+let wsGlobal : WebSocket;
 let requestedData:boolean = false;
 
 autoUpdater.checkForUpdatesAndNotify();
@@ -38,14 +38,23 @@ function handleMessageFromSIDE(message : any) {
       if (wsGlobal) {
         wsGlobal.send(JSON.stringify({type: 'data', payload: message.payload}));
         // focusSourceTab();
-        wsGlobal.disconnect();
-        wsGlobal = undefined;
+        // wsGlobal.terminate();        
       }
       break;
     case "showModal":
       if (wsGlobal) {
         requestedData = true;
         wsGlobal.send(JSON.stringify({type: 'showModal', payload: message.payload}));
+        
+        // focusSourceTab();
+        // var modalHandler = function(request) {
+        //   if (request.type == 'requestedData' ) {
+        //     console.log('ModalData From WebApp: ' + JSON.stringify(request.payload));
+        //     sendResponse({data: request.payload});
+        //     tabPort.onMessage.removeListener(modalHandler);
+        //   }
+        // }
+        // tabPort.onMessage.addListener(modalHandler);                                
         // focusSourceTab();
         // var modalHandler = function(request) {
         //   if (request.type == 'requestedData' ) {
@@ -109,7 +118,8 @@ wss.on("connection", (ws: WebSocket) => {
     else if (msgObj.type == 'requestedData' && requestedData)
     {
       requestedData = false;
-      console.log('ModalData From WebApp: ' + JSON.stringify(msgObj.payload));
+      console.log('ModalData From WebApp: ' + JSON.stringify(msgObj.payload));  
+      ipcMain.emit('RequestedDataFromScripter',JSON.stringify(msgObj.payload));  
       // sendResponse({data: request.payload});
       // tabPort.onMessage.removeListener(modalHandler);
     }
@@ -121,9 +131,9 @@ wss.on("connection", (ws: WebSocket) => {
 
   });
   
-  ipcMain.on('SIDEToScripter', (msg) => {
+  ipcMain.on('SIDEToScripter', (event, msg) => {
     handleMessageFromSIDE(msg);
-    //event.returnValue = true;
+    console.log(event)
   })
   //send immediatly a feedback to the incoming connection  
 });
