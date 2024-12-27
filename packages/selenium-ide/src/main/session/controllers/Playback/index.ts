@@ -163,7 +163,7 @@ export default class PlaybackController extends BaseController {
         playback.state.testID = testID
       }
       try {
-        await this.claimPlaybackWindow(playback)
+        await this.claimPlaybackWindow(playback)        
       } catch (e) {
         // playback has become invalid
         this.playbacks.splice(this.playbacks.indexOf(playback), 1)
@@ -185,7 +185,10 @@ export default class PlaybackController extends BaseController {
       if (forceNewWindow) {
         throw new Error('Force new window')
       }
-      window = await this.session.windows.requestWindowForPlayback(playback)!
+      window = await this.session.windows.getActivePlaybackWindow();
+            
+      if(!window)
+        window =  await this.session.windows.requestWindowForPlayback(playback)!
       if (!window) {
         throw new Error('No windows found')
       }

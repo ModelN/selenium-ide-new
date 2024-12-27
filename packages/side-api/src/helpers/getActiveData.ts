@@ -52,6 +52,9 @@ export const getActiveWindowHandleID = (
   const activeTest = getActiveTest(session)
   const activeIndex = Math.max(0, getActiveCommandIndex(session))
   const commands = activeTest.commands
+  if(commands.length == 0){
+    return null;
+  }
   for (let i = activeIndex; i >= 0; i--) {
     let item = commands[i]
     if (item.command == 'selectWindow') {
