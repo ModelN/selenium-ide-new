@@ -1,6 +1,6 @@
 {
   "name": "selenium-ide",
-  "version": "v1.4.6",
+  "version": "v1.4.8",
   "private": false,
   "description": "Selenium IDE electron app",
   "author": "Todd <tarsitodd@gmail.com>",
@@ -134,7 +134,7 @@
     "react-intl": "^6.6.5",
     "react-resizable-panels": "^1.0.8",
     "scroll-into-view-if-needed": "^3.0.10",
-    "selenium-webdriver": "^4.20.0",
+    "selenium-webdriver": "^4.27.0",
     "side-code-export": "4.0.10",
     "v8-compile-cache": "^2.3.0"
   },
@@ -152,7 +152,7 @@
     "ws": "^8.10.0",
     "copy-webpack-plugin": "^10.2.4",
     "css-loader": "^6.8.1",
-    "electron": "^28.2.0",
+    "electron": "^34.0.0",
     "electron-builder": "^22.14.13",
     "update-notifier": "^5.1.0",
     "electron-devtools-installer": "^3.2.0",

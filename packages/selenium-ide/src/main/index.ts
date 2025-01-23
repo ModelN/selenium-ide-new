@@ -12,7 +12,9 @@ import * as WebSocket from "ws"
 
 let wsGlobal : WebSocket;
 let requestedData:boolean = false;
-
+process.env.SELENIUM_REMOTE_URL="http://10.4.67.251:1234";
+process.env.SELENIUM_SERVER_JAR="C:/Work/SQINCode/electron/new/selenium-ide-new/packages/selenium-ide/files/selenium-server-standalone.jar";
+//process.env.SELENIUM_BROWSER="chrome:130:WINDOWS";
 autoUpdater.checkForUpdatesAndNotify();
 
 autoUpdater.on('update-available', () => {

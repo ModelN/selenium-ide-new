@@ -307,7 +307,7 @@ importers:
         version: 18.2.0
       react-dnd:
         specifier: ^16.0.1
-        version: 16.0.1(@types/hoist-non-react-statics@3.3.5)(@types/node@18.16.19)(@types/react@18.2.15)(react@18.2.0)
+        version: 16.0.1(@types/hoist-non-react-statics@3.3.5)(@types/node@20.17.13)(@types/react@18.2.15)(react@18.2.0)
       react-dnd-html5-backend:
         specifier: ^16.0.1
         version: 16.0.1
@@ -324,8 +324,8 @@ importers:
         specifier: ^3.0.10
         version: 3.0.10
       selenium-webdriver:
-        specifier: ^4.20.0
-        version: 4.20.0
+        specifier: ^4.27.0
+        version: 4.27.0
       side-code-export:
         specifier: 4.0.10
         version: link:../side-code-export
@@ -370,8 +370,8 @@ importers:
         specifier: ^6.8.1
         version: 6.8.1(webpack@5.89.0)
       electron:
-        specifier: ^28.2.0
-        version: 28.2.0
+        specifier: ^34.0.0
+        version: 34.0.0
       electron-builder:
         specifier: ^22.14.13
         version: 22.14.13
@@ -407,7 +407,7 @@ importers:
         version: 9.5.0(typescript@5.2.2)(webpack@5.89.0)
       ts-node:
         specifier: ^10.9.1
-        version: 10.9.1(@types/node@18.16.19)(typescript@5.2.2)
+        version: 10.9.1(@types/node@20.17.13)(typescript@5.2.2)
       typescript:
         specifier: ^5.2.2
         version: 5.2.2
@@ -596,7 +596,7 @@ importers:
         version: 4.1.22
       selenium-webdriver:
         specifier: ^4.20.0
-        version: 4.20.0
+        version: 4.27.0
     devDependencies:
       '@seleniumhq/get-driver':
         specifier: 4.0.10
@@ -638,7 +638,7 @@ importers:
         version: 4.1.22
       selenium-webdriver:
         specifier: ^4.20.0
-        version: 4.20.0
+        version: 4.27.0
 
 packages:
 
@@ -2148,6 +2148,9 @@ packages:
   '@types/node@18.16.19':
     resolution: {integrity: sha512-IXl7o+R9iti9eBW4Wg2hx1xQDig183jj7YLn8F7udNceyfkbn1ZxmzZXuak20gR40D7pIkIY1kYGx5VIGbaHKA==}
 
+  '@types/node@20.17.13':
+    resolution: {integrity: sha512-RNf+4dEeV69PIvyp++4IKM2vnLXtmp/JovfeQm5P5+qpKb6wHoH7INywLdZ7z+gVX46kgBP/fwJJvZYaHxtdyw==}
+
   '@types/normalize-package-data@2.4.1':
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
 
@@ -2693,6 +2696,7 @@ packages:
 
   boolean@3.2.0:
     resolution: {integrity: sha512-d0II/GO9uf9lfUHH2BQsjxzRJZBdsjgsBiW4BvhWk/3qoKwQFjIDVN19PfX8F2D/r9PCMTtLWjYVCFrpeYUzsw==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   boxen@5.1.2:
     resolution: {integrity: sha512-9gYgQKXx+1nP8mP7CzFyaUARhg7D3n1dF/FnErWmu9l6JvGpNUN278h0aSb+QjoiKSWG+iZ3uHrcqk0qrY9RQQ==}
@@ -3415,8 +3419,8 @@ packages:
     engines: {node: '>= 12.20.55'}
     hasBin: true
 
-  electron@28.2.0:
-    resolution: {integrity: sha512-22SylXQQ9IHtwLw4D+Z4Si7OUpeDtpHfJVTjy3yv53iLg5zJKKPOCWT4ZwgYGHQZ0eldyBrYBHF/P9FPd2CcVQ==}
+  electron@34.0.0:
+    resolution: {integrity: sha512-fpaPb0lifoUJ6UJa4Lk8/0B2Ku/xDZWdc1Gkj67jbygTCrvSon0qquju6Ltx1Kz23GRqqlIHXiy9EvrjpY7/Wg==}
     engines: {node: '>= 12.20.55'}
     hasBin: true
 
@@ -5896,12 +5900,8 @@ packages:
   select-hose@2.0.0:
     resolution: {integrity: sha512-mEugaLK+YfkijB4fx0e6kImuJdCIt2LxCRcbEYPqRGCs4F2ogyfZU5IAZRdjCP8JPq2AtdNoC/Dux63d9Kiryg==}
 
-  selenium-webdriver@4.20.0:
-    resolution: {integrity: sha512-s/G44lGQ1xB3tmtX6NNPomlkpL6CxLdmAvp/AGWWwi4qv5Te1+qji7tPSyr6gyuoPpdYiof1rKnWe3luy0MrYA==}
-    engines: {node: '>= 14.20.0'}
-
-  selenium-webdriver@4.26.0:
-    resolution: {integrity: sha512-nA7jMRIPV17mJmAiTDBWN96Sy0Uxrz5CCLb7bLVV6PpL417SyBMPc2Zo/uoREc2EOHlzHwHwAlFtgmSngSY4WQ==}
+  selenium-webdriver@4.27.0:
+    resolution: {integrity: sha512-LkTJrNz5socxpPnWPODQ2bQ65eYx9JK+DQMYNihpTjMCqHwgWGYQnQTCAAche2W3ZP87alA+1zYPvgS8tHNzMQ==}
     engines: {node: '>= 14.21.0'}
 
   selfsigned@2.4.1:
@@ -6514,6 +6514,9 @@ packages:
 
   unbox-primitive@1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}
+
+  undici-types@6.19.8:
+    resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
 
   unescape@1.0.1:
     resolution: {integrity: sha512-O0+af1Gs50lyH1nUu3ZyYS1cRh01Q/kUKatTOkSs7jukXE6/NebucDVxyiDsA9AQ4JC1V1jUH9EO8JX2nMDgGQ==}
@@ -8705,7 +8708,7 @@ snapshots:
       '@seleniumhq/side-commons': 4.0.10
       '@seleniumhq/side-model': 4.0.10
       '@types/selenium-webdriver': 4.1.27
-      selenium-webdriver: 4.26.0
+      selenium-webdriver: 4.27.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -8968,6 +8971,10 @@ snapshots:
   '@types/node@16.11.64': {}
 
   '@types/node@18.16.19': {}
+
+  '@types/node@20.17.13':
+    dependencies:
+      undici-types: 6.19.8
 
   '@types/normalize-package-data@2.4.1': {}
 
@@ -10450,10 +10457,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  electron@28.2.0:
+  electron@34.0.0:
     dependencies:
       '@electron/get': 2.0.2
-      '@types/node': 18.16.19
+      '@types/node': 20.17.13
       extract-zip: 2.0.1
     transitivePeerDependencies:
       - supports-color
@@ -13258,7 +13265,7 @@ snapshots:
     dependencies:
       dnd-core: 16.0.1
 
-  react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.5)(@types/node@18.16.19)(@types/react@18.2.15)(react@18.2.0):
+  react-dnd@16.0.1(@types/hoist-non-react-statics@3.3.5)(@types/node@20.17.13)(@types/react@18.2.15)(react@18.2.0):
     dependencies:
       '@react-dnd/invariant': 4.0.2
       '@react-dnd/shallowequal': 4.0.2
@@ -13268,7 +13275,7 @@ snapshots:
       react: 18.2.0
     optionalDependencies:
       '@types/hoist-non-react-statics': 3.3.5
-      '@types/node': 18.16.19
+      '@types/node': 20.17.13
       '@types/react': 18.2.15
 
   react-dom@18.2.0(react@18.2.0):
@@ -13598,16 +13605,7 @@ snapshots:
 
   select-hose@2.0.0: {}
 
-  selenium-webdriver@4.20.0:
-    dependencies:
-      jszip: 3.10.1
-      tmp: 0.2.3
-      ws: 8.18.0
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-
-  selenium-webdriver@4.26.0:
+  selenium-webdriver@4.27.0:
     dependencies:
       '@bazel/runfiles': 6.3.1
       jszip: 3.10.1
@@ -14239,14 +14237,14 @@ snapshots:
       yn: 3.1.1
     optional: true
 
-  ts-node@10.9.1(@types/node@18.16.19)(typescript@5.2.2):
+  ts-node@10.9.1(@types/node@20.17.13)(typescript@5.2.2):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.9
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.3
-      '@types/node': 18.16.19
+      '@types/node': 20.17.13
       acorn: 8.8.0
       acorn-walk: 8.2.0
       arg: 4.1.3
@@ -14325,6 +14323,8 @@ snapshots:
       has-bigints: 1.0.2
       has-symbols: 1.0.3
       which-boxed-primitive: 1.0.2
+
+  undici-types@6.19.8: {}
 
   unescape@1.0.1:
     dependencies:
