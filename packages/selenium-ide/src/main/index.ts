@@ -17,8 +17,20 @@ let requestedData:boolean = false;
 
 let appPath = __dirname;
 appPath = path.join(__dirname, '../files');
+appPath = path.resolve(appPath);
+if (app.isPackaged) {
+  appPath = path.join(process.resourcesPath, 'files');
+} else {
+  appPath = path.join(__dirname, '../files');
+}
 process.env.SELENIUM_SERVER_JAR=appPath+"\\selenium-server-standalone.jar";
 autoUpdater.checkForUpdatesAndNotify();
+
+const getCurrentFilePath = () => {
+  return __filename;
+};
+
+console.log(`Current file path: ${getCurrentFilePath()}`);
 
 autoUpdater.on('update-available', () => {
   log.info('Update available.');
