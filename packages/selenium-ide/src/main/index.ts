@@ -15,8 +15,9 @@ let wsGlobal : WebSocket;
 let requestedData:boolean = false;
 //process.env.SELENIUM_REMOTE_URL="http://10.4.67.251:1234";
 
-let appPath = (process.env.NODE_ENV !== "development") ? process.env.PORTABLE_EXECUTABLE_DIR : path.dirname(app.getAppPath());
-process.env.SELENIUM_SERVER_JAR=appPath+"\\selenium-ide\\files\\selenium-server-standalone.jar";
+let appPath = __dirname;
+appPath = path.join(__dirname, '../files');
+process.env.SELENIUM_SERVER_JAR=appPath+"\\selenium-server-standalone.jar";
 autoUpdater.checkForUpdatesAndNotify();
 
 autoUpdater.on('update-available', () => {
