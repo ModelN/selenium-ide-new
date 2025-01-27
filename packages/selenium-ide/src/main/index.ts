@@ -16,10 +16,8 @@ let requestedData:boolean = false;
 //process.env.SELENIUM_REMOTE_URL="http://10.4.67.251:1234";
 
 let appPath = __dirname;
-appPath = path.join(__dirname, '../files');
-appPath = path.resolve(appPath);
-if (app.isPackaged) {
-  appPath = path.join(process.resourcesPath, 'files');
+if (app.isPackaged) {    
+  appPath = path.join(process.cwd(), 'resources/files');
 } else {
   appPath = path.join(__dirname, '../files');
 }
