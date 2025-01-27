@@ -1,6 +1,7 @@
 import 'v8-compile-cache'
 import 'source-map-support/register'
 import { app , ipcMain, dialog} from 'electron'
+import path from 'path'
 import { autoUpdater } from 'electron-updater'
 import { configureLogging, connectSessionLogging } from './log'
 import createSession from './session'
@@ -13,7 +14,8 @@ import * as WebSocket from "ws"
 let wsGlobal : WebSocket;
 let requestedData:boolean = false;
 //process.env.SELENIUM_REMOTE_URL="http://10.4.67.251:1234";
-process.env.SELENIUM_SERVER_JAR="C:/Work/SQINCode/electron/new/selenium-ide-new/packages/selenium-ide/files/selenium-server-standalone.jar";
+let dirPath = path.dirname(app.getAppPath())
+process.env.SELENIUM_SERVER_JAR=dirPath+"\\selenium-ide\\files\\selenium-server-standalone.jar";
 autoUpdater.checkForUpdatesAndNotify();
 
 autoUpdater.on('update-available', () => {
