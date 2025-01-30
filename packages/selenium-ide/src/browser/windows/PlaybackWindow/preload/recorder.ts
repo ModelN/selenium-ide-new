@@ -285,8 +285,7 @@ updateAppType() {
     if (!this.eventHandlers[key]) {
       this.eventHandlers[key] = []
     }
-    this.eventHandlers[key].push(handler)
-    console.debug("##########"+handler)
+    this.eventHandlers[key].push(handler)    
   }
 
   addMutationObserver(

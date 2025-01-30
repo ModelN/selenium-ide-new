@@ -1,5 +1,6 @@
 import Recorder from './recorder'
 import { singleton as locatorBuilders } from './locator-builders_custom'
+import LocatorBuilders from './locator-builders_custom'
 
 let recorder: Recorder
 async function onContextMenu(event: any) {
@@ -18,8 +19,8 @@ async function onContextMenu(event: any) {
         '',
         false,
         null,
-        '',
-        '',
+        LocatorBuilders.displayName,
+        LocatorBuilders.recordedType,
         '',
         false
       )
@@ -33,8 +34,8 @@ async function onContextMenu(event: any) {
         false,
         null,
 
-                '',
-                '',
+        LocatorBuilders.displayName,
+        LocatorBuilders.recordedType,
                 '',
                 false
       )
@@ -48,8 +49,8 @@ async function onContextMenu(event: any) {
         false,
         null,
 
-                '',
-                '',
+        LocatorBuilders.displayName,
+        LocatorBuilders.recordedType,
                 '',
                 false
       )
@@ -63,8 +64,8 @@ async function onContextMenu(event: any) {
         false,
         null,
 
-                '',
-                '',
+        LocatorBuilders.displayName,
+        LocatorBuilders.recordedType,
                 '',
                 false
       )
@@ -78,8 +79,8 @@ async function onContextMenu(event: any) {
         false,
         null,
 
-                '',
-                '',
+        LocatorBuilders.displayName,
+        LocatorBuilders.recordedType,
                 '',
                 false
       )
@@ -93,8 +94,8 @@ async function onContextMenu(event: any) {
         false,
         null,
 
-                '',
-                '',
+        LocatorBuilders.displayName,
+        LocatorBuilders.recordedType,
                 '',
                 false
       )
@@ -109,8 +110,8 @@ async function onContextMenu(event: any) {
         false,
         null,
 
-                '',
-                '',
+        LocatorBuilders.displayName,
+        LocatorBuilders.recordedType,
                 '',
                 false
       )
@@ -131,8 +132,8 @@ async function onContextMenu(event: any) {
         false,
         null,
 
-                '',
-                '',
+        LocatorBuilders.displayName,
+        LocatorBuilders.recordedType,
                 '',
                 false
       )

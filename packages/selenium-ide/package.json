@@ -1,6 +1,6 @@
 {
   "name": "selenium-ide",
-  "version": "v1.4.8",
+  "version": "v1.4.7",
   "private": false,
   "description": "Selenium IDE electron app",
   "author": "Todd <tarsitodd@gmail.com>",
@@ -43,6 +43,9 @@
     "asarUnpack": [
       "node_modules/electron-chromedriver/bin/chromedriver",
       "node_modules/electron-chromedriver/bin/chromedriver.exe"
+    ],
+    "extraResources": [
+      "files/*.jar"
     ],
     "files": [
       "**/build/**/*",
