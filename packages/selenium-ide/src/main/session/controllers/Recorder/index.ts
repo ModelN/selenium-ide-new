@@ -102,7 +102,7 @@ export default class RecorderController extends BaseController {
     const windows = BrowserWindow.getAllWindows()
     this.windowIDs = windows.map((window) => window.id)
     this.updateCommentInRecordedCommand(cmd.command, cmd.comment, mainCommand)
-    if (cmd.recordedType == 'table' && (cmd.command == 'click' || cmd.command == 'jsclick')) {
+    if (cmd.recordedType == 'table') {
       var self = this;
       console.log('New window opened, delaying the input request to webapp by 5 seconds');
       //Adding delay before asking for inputs in webapp, as facing recording side issues in newly opened window
