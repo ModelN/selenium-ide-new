@@ -63,8 +63,7 @@ export default class LocatorBuilders {
     )
   }
 
-  build(e: HTMLElement) {
-    debugger;
+  build(e: HTMLElement) {    
     let locators = this.buildAll(e, false)
     if (locators.length > 0) {
       return locators[0][0]

@@ -135,8 +135,7 @@ export default class Recorder {
         case 'update':
           newCommand = result.command
       }
-    }
-    debugger;
+    }    
     window.sideAPI.recorder.recordNewCommand(newCommand, overrideRecorder)
   }
 
@@ -172,8 +171,7 @@ export default class Recorder {
     }
   }
 
-  attach() {
-    debugger;
+  attach() {    
     console.debug('**************: ');
     if (!this.attached) {
       // @ts-expect-error
