@@ -264,7 +264,7 @@ var handleGWTTable = function(e: any) {
     if (!e.closest('.alternateGridBody,.headerBar,table.data-table'))
         return undefined;
     var rowType = e.closest('.headerBar,th') ? 'header' : 'data';
-    var tableData: any;
+    var tableData: any = {};
     tableData.rowType = rowType;
     tableData = buildTableElementData(e, tableData);
     var parGridEl = e.closest('.listGrid,table.data-table');
@@ -343,7 +343,7 @@ var handleNormalTable = function(e: any) {
     var rowType = 'data';
     if (isHavingOneOfProvidedClassList(closestTR, TABLE_HEADER_CLASS_LIST))
         rowType = 'header';
-    var tableData: any;
+    var tableData: any = {};
     tableData.rowType = rowType;
     tableData = buildTableElementData(e, tableData);
     var headerTDs = getHeaderColumnCellsInTable(e, table);
@@ -381,14 +381,15 @@ var handleNormalTable = function(e: any) {
 };
 
 function table(e: any) {
-    var additionalData: any;
-    var recordedType: any;
+    var additionalData: any = {};
+    var recordedType: any = '';
     var tableData = buildTableRowCriteriaData(e);
     if (!recordedType && tableData) {
-        recordedType = 'table';
+        LocatorBuilders.recordedType = 'table';
         var tableName = tableData.name;
         delete tableData.name;
         Object.assign(additionalData, tableData);
+        LocatorBuilders.additionalData = additionalData;
         return 'table=' + tableName;
     }
     return null;
@@ -396,7 +397,7 @@ function table(e: any) {
 
 function buildTableRowCriteriaData(e: any) {
     try {
-        var tableData;
+        var tableData:any = {};
         if (e.closest('#gwt-content-container'))
             tableData = handleGWTTable(e);
         else
@@ -414,7 +415,7 @@ function buildTableRowCriteriaData(e: any) {
 }
 
 function handleGWTNonTablePatterns(e: any) {
-    var additionalData: any;
+    var additionalData: any = {};
     //Handle pickListMenu items in GWT tables
     if (e.closest('div.pickListMenuBody,div.windowBody,div.windowHeader'))
         return handleGWTPickList(e);
@@ -490,7 +491,7 @@ function handleSaveSearchPattern(e: any) {
         var xpath = "//form[contains(@action," + LocatorBuilders.attributeValue(formAction) + ")]//" + e.tagName.toLowerCase();
         xpath = xpath + (e.name ? "[@name='" + e.name + "']" : (e.id ? "[@id='" + e.id + "']" : ""));
         if (locatorBuilders.isElementUniqueWithXPathInAllVisibleIframes(xpath, e))
-            return xpath;
+            return "xpath=" + xpath;
     }
     return null;
 }
@@ -932,20 +933,21 @@ function isHavingOneOfProvidedClassList(e: any, classList: any) {
 
 function dragDropList(e: any) {
     var recordedType: any;
-    var additionalData: any;
+    var additionalData: any = {};
     var sortableClass = 'ui-sortable';
     var elClass = e.getAttribute('class') || '';
     if (!e.closest('div.' + sortableClass) && elClass.indexOf(sortableClass) == -1)
         return null;
     if (!recordedType)
-        recordedType = 'dragAndDropToObject';
+        LocatorBuilders.recordedType = 'dragAndDropToObject';
     if (elClass.indexOf(sortableClass) > -1 && e.id && locatorBuilders.isElementUniqueWithXPathInAllVisibleIframes("//*[@id='" + e.id.trim() + "']", e)
         && elClass.indexOf('connectedSortable') > -1)
         return 'id=' + e.id.trim();
     else {
         var elText = LocatorBuilders.getInnerTextWithoutChildren(e);
         if (recordedType == 'dragAndDropToObject')
-            additionalData.innerText = elText;
+        additionalData.innerText = elText;
+        LocatorBuilders.additionalData = additionalData;
         return "xpath=//div[contains(@class,'" + sortableClass + "')]/*[" + TEXT_NBSP_TO_SPACE_TRANSLATE + "='" + elText + "']";
     }
 }
@@ -1054,7 +1056,7 @@ function getPreviousTDSiblingWithLabelClass(node: any) {
 }
 
 function xpathAttr(e: any){
-    var additionalData: any;
+    var additionalData: any={};
     if (e.id && IDS_TO_SKIP_RECORDING.includes(e.id))
         return null;
     var tagName = e.nodeName.toLowerCase();
@@ -1266,7 +1268,7 @@ function getCustomXpathForGridActions(e: any){
  */
 function handleSuccessErrorMessagesPattern(e: any) {
     var recordedType: any;
-    var additionalData: any;
+    var additionalData: any = {};
     var closestTable = e.closest('table#tbl-error-box,table#tbl-success-box,table#tbl-warning-box');
     if (!closestTable)
         return null;
@@ -1287,7 +1289,9 @@ function handleSuccessErrorMessagesPattern(e: any) {
         //only in case of errors we can consider as locatorHavingData.
         if (!recordedType && (tableId == 'tbl-error-box' || innerTexts)) {
             recordedType = 'locatorHavingData';
+            LocatorBuilders.recordedType = recordedType;
             additionalData.innerText = tableId == 'tbl-error-box' ? innerText : innerTexts;
+            LocatorBuilders.additionalData =  additionalData;
         }
         if(!displayName)
             displayName = displayName;
@@ -1321,7 +1325,7 @@ function handleSuccessErrorMessagesPattern(e: any) {
  */
 function handleGPSubmissionFileTemplateFormFields(e: any) {
     var recordedType: any;
-    var additionalData: any;
+    var additionalData: any = {};
     if (!e.closest('form[name=SubmissionFileTemplateForm]'))
         return null;
     var prevColNameEl = window.document.evaluate("./preceding::input[@type='hidden' and @name='columnId'][1]/ancestor::span[contains(@class,'control_header_label')]", e.closest('tr')).iterateNext();
@@ -1343,7 +1347,9 @@ function handleGPSubmissionFileTemplateFormFields(e: any) {
     }
     if (!recordedType) {
         recordedType = 'locatorHavingData';
+        LocatorBuilders.recordedType = recordedType;
         additionalData.innerText = colNameText;
+        LocatorBuilders.additionalData = additionalData;
     }
     var nameAttr = e.getAttribute('name');
     if (nameAttr && e.type != 'radio')
@@ -1356,7 +1362,7 @@ function handleGPSubmissionFileTemplateFormFields(e: any) {
  */
 function handleLeftNavPattern(e: any) {
     var recordedType: any;
-    var additionalData: any;
+    var additionalData: any = {};
     var displayName: any;
     if (!e.closest('td#left_panel,td.gp_selector_item,td.gp_selector_item_h'))
         return null;
@@ -1368,7 +1374,9 @@ function handleLeftNavPattern(e: any) {
             var xpath = "//td[contains(@class,'gp_selector_item')]//a[normalize-space(.)='" + innerText + "']";
             if (!recordedType) {
                 recordedType = 'leftNav';
+                LocatorBuilders.recordedType = recordedType;
                 additionalData.navLinks = innerText;
+                LocatorBuilders.additionalData = additionalData;
             }
             return "xpath=" + xpath;
         }
@@ -1414,12 +1422,14 @@ function handleLeftNavPattern(e: any) {
         }
         if (dynamicLinks.length >= 2 && !recordedType) {
             recordedType = 'leftNav';
+            LocatorBuilders.recordedType = recordedType;
             var navLinks = '';
             //Ignore last element
             for (var k = 0; k < dynamicLinks.length - 1; k++) {
                 navLinks = dynamicLinks[k] + (navLinks == '' ? '' : '->' + navLinks);
             }
             additionalData.navLinks = navLinks;
+            LocatorBuilders.additionalData = additionalData;
             if (displayName)
                 displayName = displayName;
         }
@@ -1433,7 +1443,7 @@ function handleLeftNavPattern(e: any) {
  */
 function handleFieldSetMovePattern(e: any) {
     var recordedType: any;
-    var additionalData: any;
+    var additionalData: any = {};
     var elTag = e.tagName.toLowerCase();
     var elSrc = e.getAttribute('src') || '';
     var elClass = e.getAttribute('class') || '';
@@ -1456,7 +1466,9 @@ function handleFieldSetMovePattern(e: any) {
         var elInnerText = LocatorBuilders.getInnerTextWithoutChildren(e);
         if (!recordedType) {
             recordedType = 'locatorHavingData';
+            LocatorBuilders.recordedType = recordedType;
             additionalData.innerText = elInnerText;
+            LocatorBuilders.additionalData = additionalData;
         }
         return "xpath=//fieldset[contains(@class,'x-fieldset') and ./legend/span[contains(text(),'" + legendText + "')]]" +
             "//div[normalize-space(text())='" + elInnerText + "']";
@@ -1568,7 +1580,7 @@ function handleGPFormulaValidationImages(e: any) {
  */
 function handleGPPriceStatusChangeAction(e: any) {
     var recordedType: any;
-    var additionalData: any;
+    var additionalData: any = {};
     if (!e.closest('form[name=priceStatusChangeActionForm]'))
         return null;
     var closestTD = e.closest('td');
@@ -1588,7 +1600,9 @@ function handleGPPriceStatusChangeAction(e: any) {
         "/following::td[1]//tr[normalize-space(translate(.,'\\u00a0',' '))=normalize-space('" + trInnerText + "')]";
     if (!recordedType) {
         recordedType = 'locatorHavingData';
+        LocatorBuilders.recordedType = recordedType;
         additionalData.innerText = trInnerText;
+        LocatorBuilders.additionalData = additionalData;
     }
     return "xpath=" + xpath;
 }
@@ -1599,7 +1613,7 @@ function handleGPPriceStatusChangeAction(e: any) {
  */
 function handleGPImportActionForm(e: any) {
     var recordedType: any;
-    var additionalData: any;
+    var additionalData: any = {};
     if (!e.closest('form[action="/gp/importAction.do?operation=goBackToMapping"]'))
         return null;
     console.log('inside handling GP Import Action Error page');
@@ -1631,7 +1645,9 @@ function handleGPImportActionForm(e: any) {
     }
     if (!recordedType) {
         recordedType = 'locatorHavingData';
+        LocatorBuilders.recordedType = recordedType;
         additionalData.innerText = (labelText ? labelText : '') + (labelText && innerText ? '->' : '') + (innerText ? innerText : '');
+        LocatorBuilders.additionalData = additionalData;
     }
     return xpath;
 }

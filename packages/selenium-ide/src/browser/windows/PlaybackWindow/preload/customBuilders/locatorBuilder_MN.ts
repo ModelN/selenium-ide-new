@@ -345,6 +345,7 @@ function leftNav(e: any) {
                     elXpath = curElXpathWithForm + ']//' + elXpath;
                 }
                 LocatorBuilders.additionalData = additionalData;
+                LocatorBuilders.recordedType = recordedType;
                 return "xpath=//" + elXpath;
             }
         }
